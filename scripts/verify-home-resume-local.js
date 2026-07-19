@@ -2,7 +2,11 @@ const assert = require("assert");
 
 global.Page = () => {};
 global.wx = {};
-const { getResumeDestination } = require("../miniprogram/pages/index/index.js");
+const {
+  getResumeDestination,
+  INTRO_URL,
+  PRIMARY_BUTTON_TEXT,
+} = require("../miniprogram/pages/index/index.js");
 
 const result = {
   routes: [{ routeId: "A" }, { routeId: "B" }, { routeId: "C" }],
@@ -13,8 +17,10 @@ const plan = { selectedRouteId: "B" };
 function main() {
   assert.deepStrictEqual(getResumeDestination(null, null, null), {
     url: "/pages/question/index",
-    label: "开始定位",
+    label: "开启定位",
   });
+  assert.strictEqual(PRIMARY_BUTTON_TEXT, "开启定位");
+  assert.strictEqual(INTRO_URL, "/pages/positioning-intro/index");
   assert.deepStrictEqual(getResumeDestination({
     currentStep: "questions",
     currentQuestionIndex: 2,

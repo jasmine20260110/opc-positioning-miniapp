@@ -1,0 +1,15 @@
+<view class="intro-page">
+  <view class="intro-artboard">
+    <image
+      class="intro-image"
+      src="/images/opc-positioning-intro.jpg"
+      mode="scaleToFill"
+    />
+    <button
+      class="intro-enter-button"
+      bindtap="onEnter"
+      disabled="{{entering}}"
+      aria-label="进入我的人生花园"
+    ></button>
+  </view>
+</view>

@@ -6,9 +6,11 @@ const RESULT_KEY = "opc_mvp_result";
 const CONDITIONS_KEY = "opc_mvp_conditions";
 const PLAN_KEY = "opc_mvp_plan";
 const QUESTION_URL = "/pages/question/index";
+const INTRO_URL = "/pages/positioning-intro/index";
+const PRIMARY_BUTTON_TEXT = "开启定位";
 
 function getResumeDestination(session, result, plan) {
-  if (!session) return { url: QUESTION_URL, label: "开始定位" };
+  if (!session) return { url: QUESTION_URL, label: PRIMARY_BUTTON_TEXT };
 
   const step = session.currentStep;
   if (step === "plan" && result && result.routes && (plan || result.plan)) {
@@ -43,7 +45,7 @@ function getResumeDestination(session, result, plan) {
     : Number.isInteger(session.currentIndex) ? session.currentIndex : 0;
   return {
     url: QUESTION_URL,
-    label: currentIndex > 0 ? `继续第${currentIndex + 1}题` : "继续定位",
+    label: currentIndex > 0 ? `继续第${currentIndex + 1}题` : PRIMARY_BUTTON_TEXT,
   };
 }
 
@@ -58,18 +60,15 @@ Page({
   data: {
     hasSavedSession: false,
     demoStarting: false,
-    primaryButtonText: "开始定位",
+    primaryButtonText: PRIMARY_BUTTON_TEXT,
   },
 
   onShow() {
     const session = wx.getStorageSync(SESSION_KEY);
-    const result = wx.getStorageSync(RESULT_KEY);
-    const plan = wx.getStorageSync(PLAN_KEY);
-    const destination = getResumeDestination(session, result, plan);
     this.setData({
       hasSavedSession: Boolean(session),
       demoStarting: false,
-      primaryButtonText: destination.label,
+      primaryButtonText: PRIMARY_BUTTON_TEXT,
     });
   },
 
@@ -98,12 +97,7 @@ Page({
       session = createSession(false);
       wx.setStorageSync(SESSION_KEY, session);
     }
-    const destination = getResumeDestination(
-      session,
-      wx.getStorageSync(RESULT_KEY),
-      wx.getStorageSync(PLAN_KEY),
-    );
-    this.openPage(destination.url);
+    this.openPage(INTRO_URL);
   },
 
   onUseDemo() {
@@ -117,4 +111,4 @@ Page({
   },
 });
 
-module.exports = { getResumeDestination };
+module.exports = { getResumeDestination, INTRO_URL, PRIMARY_BUTTON_TEXT };

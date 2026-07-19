@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/positioning-intro/index",
     "pages/question/index",
     "pages/loading/index",
     "pages/report/index",

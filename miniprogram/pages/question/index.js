@@ -21,11 +21,18 @@ Page({
     demoMode: false,
   },
 
-  onLoad() {
+  onLoad(options = {}) {
     const storedSession = wx.getStorageSync(SESSION_KEY);
     this.session = storedSession
       ? normalizeQuestionSession(storedSession)
       : createQuestionSession();
+    if (options.startAt === "1") {
+      this.session.currentIndex = 0;
+      this.session.currentQuestionIndex = 0;
+      this.session.currentStep = "questions";
+      this.session.status = "in_progress";
+      this.session.updatedAt = new Date().toISOString();
+    }
     wx.setStorageSync(SESSION_KEY, this.session);
     this.loadQuestion(this.session.currentQuestionIndex);
   },

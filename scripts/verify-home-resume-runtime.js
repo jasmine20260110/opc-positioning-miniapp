@@ -37,11 +37,17 @@ async function main() {
     let page = await miniProgram.reLaunch("/pages/index/index");
     const primaryButton = await page.$(".main-button");
     const completedLabel = await primaryButton.text();
-    assert.strictEqual(completedLabel, "继续7天计划");
+    assert.strictEqual(completedLabel, "开启定位");
     await primaryButton.tap();
-    await sleep(1800);
+    await sleep(800);
     page = await miniProgram.currentPage();
-    assert.strictEqual(page.path, "pages/plan/index", "完成问答后错误返回Q20");
+    assert.strictEqual(page.path, "pages/positioning-intro/index");
+    const completedEnterButton = await page.$(".intro-enter-button");
+    await completedEnterButton.tap();
+    await sleep(1000);
+    page = await miniProgram.currentPage();
+    assert.strictEqual(page.path, "pages/question/index");
+    assert.strictEqual(await page.data("currentIndex"), 0);
 
     const draftSession = {
       sessionId: "resume-q3",
@@ -59,22 +65,28 @@ async function main() {
     page = await miniProgram.reLaunch("/pages/index/index");
     const questionButton = await page.$(".main-button");
     const draftLabel = await questionButton.text();
-    assert.strictEqual(draftLabel, "继续第3题");
+    assert.strictEqual(draftLabel, "开启定位");
     await questionButton.tap();
-    await sleep(1800);
+    await sleep(800);
+    page = await miniProgram.currentPage();
+    assert.strictEqual(page.path, "pages/positioning-intro/index");
+    const draftEnterButton = await page.$(".intro-enter-button");
+    await draftEnterButton.tap();
+    await sleep(1000);
     page = await miniProgram.currentPage();
     assert.strictEqual(page.path, "pages/question/index");
-    assert.strictEqual(await page.data("currentIndex"), 2);
+    assert.strictEqual(await page.data("currentIndex"), 0);
 
     assert.strictEqual(exceptions.length, 0);
     assert.strictEqual(errors.length, 0);
     console.log(JSON.stringify({
       success: true,
       completedLabel,
-      completedDestination: "pages/plan/index",
+      completedDestination: "pages/question/index",
       draftLabel,
       draftDestination: "pages/question/index",
-      draftQuestionIndex: 2,
+      draftQuestionIndex: 0,
+      introRequiresTap: true,
       runtimeExceptions: 0,
       consoleErrors: 0,
     }, null, 2));
