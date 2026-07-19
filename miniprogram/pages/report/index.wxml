@@ -6,23 +6,29 @@
   <block wx:if="{{mode === 'evidence'}}">
     <view class="card evidence-summary">
       <view class="section-title">你的心流证据</view>
-      <view wx:for="{{evidence.flowEvidence}}" wx:key="sourceAnswerId" class="evidence-item">
-        <view class="evidence-head">
-          <text>{{item.claim}}</text>
-          <text class="evidence-tag">{{item.evidenceType}}</text>
+      <view class="evidence-combined">
+        <view wx:if="{{flowEvidenceSummary.hasEvidence}}">
+          <view class="evidence-claims">{{flowEvidenceSummary.claims}}</view>
+          <view wx:if="{{flowEvidenceSummary.evidenceTypes}}" class="evidence-meta">
+            <text class="evidence-tag">{{flowEvidenceSummary.evidenceTypes}}</text>
+          </view>
+          <view wx:if="{{flowEvidenceSummary.sources}}" class="quote">{{flowEvidenceSummary.sources}}</view>
         </view>
-        <view class="quote">{{item.sourceAnswerId}}｜“{{item.sourceQuote}}”</view>
+        <view wx:else class="evidence-empty">暂无可展示的心流证据</view>
       </view>
     </view>
 
     <view class="card evidence-summary">
       <view class="section-title">你的优势证据</view>
-      <view wx:for="{{evidence.strengthEvidence}}" wx:key="sourceAnswerId" class="evidence-item">
-        <view class="evidence-head">
-          <text>{{item.claim}}</text>
-          <text class="evidence-tag">{{item.evidenceType}}</text>
+      <view class="evidence-combined">
+        <view wx:if="{{strengthEvidenceSummary.hasEvidence}}">
+          <view class="evidence-claims">{{strengthEvidenceSummary.claims}}</view>
+          <view wx:if="{{strengthEvidenceSummary.evidenceTypes}}" class="evidence-meta">
+            <text class="evidence-tag">{{strengthEvidenceSummary.evidenceTypes}}</text>
+          </view>
+          <view wx:if="{{strengthEvidenceSummary.sources}}" class="quote">{{strengthEvidenceSummary.sources}}</view>
         </view>
-        <view class="quote">{{item.sourceAnswerId}}｜“{{item.sourceQuote}}”</view>
+        <view wx:else class="evidence-empty">暂无可展示的优势证据</view>
       </view>
     </view>
 

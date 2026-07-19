@@ -6,23 +6,19 @@
   padding-bottom: 20rpx;
 }
 
-.evidence-item {
-  padding: 24rpx 0;
-  border-bottom: 1rpx solid #eee7e1;
+.evidence-combined {
+  padding-top: 24rpx;
 }
 
-.evidence-item:last-child {
-  border-bottom: 0;
-}
-
-.evidence-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+.evidence-claims {
   color: #352f2c;
   font-size: 27rpx;
   font-weight: 600;
-  gap: 20rpx;
+  line-height: 1.75;
+}
+
+.evidence-meta {
+  margin-top: 16rpx;
 }
 
 .evidence-tag {
@@ -41,6 +37,12 @@
   background: #f3f0ed;
   color: #736b65;
   font-size: 23rpx;
+  line-height: 1.65;
+}
+
+.evidence-empty {
+  color: #8c837c;
+  font-size: 24rpx;
   line-height: 1.65;
 }
 

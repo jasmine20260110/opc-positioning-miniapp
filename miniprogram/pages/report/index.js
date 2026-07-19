@@ -44,6 +44,30 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function summarizeEvidence(items) {
+  const evidenceItems = Array.isArray(items) ? items : [];
+  const claims = evidenceItems
+    .map((item) => item && item.claim)
+    .filter(Boolean);
+  const evidenceTypes = [...new Set(evidenceItems
+    .map((item) => item && item.evidenceType)
+    .filter(Boolean))];
+  const sources = evidenceItems
+    .map((item) => {
+      if (!item || !item.sourceQuote) return "";
+      const sourceLabel = item.sourceAnswerId ? `${item.sourceAnswerId}｜` : "";
+      return `${sourceLabel}“${item.sourceQuote}”`;
+    })
+    .filter(Boolean);
+
+  return {
+    hasEvidence: claims.length > 0 || sources.length > 0,
+    claims: claims.join("；"),
+    evidenceTypes: evidenceTypes.join(" · "),
+    sources: sources.join("；"),
+  };
+}
+
 function mergeConditions(result, session, storedRecord) {
   const defaults = result.session && result.session.startupConditions
     ? result.session.startupConditions
@@ -126,6 +150,8 @@ Page({
     mode: "evidence",
     meta: MODE_META.evidence,
     evidence: {},
+    flowEvidenceSummary: {},
+    strengthEvidenceSummary: {},
     routes: [],
     conditions: {},
     latestRevenueOptions: ["1个月内", "3个月内", "6个月内", "可以更久"],
@@ -156,6 +182,8 @@ Page({
     }
     this.setData({
       evidence: this.result.evidence,
+      flowEvidenceSummary: summarizeEvidence(this.result.evidence.flowEvidence),
+      strengthEvidenceSummary: summarizeEvidence(this.result.evidence.strengthEvidence),
       routes: this.result.routes.map(decorateRoute),
       conditions,
     });
@@ -358,3 +386,5 @@ Page({
     wx.showToast({ title: "已保留结果，可以稍后再选", icon: "none" });
   },
 });
+
+module.exports = { summarizeEvidence };
