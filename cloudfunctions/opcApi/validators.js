@@ -114,6 +114,21 @@ function validateMarketField(field, label) {
   assert(isText(field.basis), `${label}.basis为空`);
 }
 
+function validateComparableRequirement(value, label, unitPattern, maximum) {
+  assert(isText(value), `${label}为空`);
+  const text = String(value).trim();
+  assert(!text.includes("待验证"), `${label}不能使用待验证，必须提供可计算的启动门槛假设`);
+  assert(unitPattern.test(text), `${label}缺少规定单位`);
+  const matches = text.match(/\d+(?:\.\d+)?/g);
+  assert(matches && matches.length > 0, `${label}必须包含阿拉伯数字`);
+  const numbers = matches.map(Number);
+  assert(numbers.every((number) => Number.isFinite(number) && number >= 0), `${label}包含无效数字`);
+  assert(numbers.every((number) => number <= maximum), `${label}数值超出合理范围`);
+  if (numbers.length > 1) {
+    assert(numbers[0] <= numbers[numbers.length - 1], `${label}区间顺序错误`);
+  }
+}
+
 function validateMarket(data, routeIds) {
   assert(data && Array.isArray(data.routes) && data.routes.length === 3, "市场输出必须正好包含3条路线");
   const expectedIds = [...routeIds].sort().join("");
@@ -134,11 +149,14 @@ function validateMarket(data, routeIds) {
     assert(isText(market.firstRevenueExpectation.amountRange), `routes[${index}].firstRevenueExpectation.amountRange为空`);
     assert(isText(market.firstRevenueExpectation.basis), `routes[${index}].firstRevenueExpectation.basis为空`);
     assert(requirements && typeof requirements === "object", `routes[${index}]缺少launchRequirements`);
-    ["firstRevenueCycle", "firstRevenueAmountRange", "minimumWeeklyTime", "minimumValidationBudget"].forEach((key) => {
-      assert(isText(requirements[key]), `routes[${index}].launchRequirements.${key}为空`);
-    });
-    assert(requirements.firstValidationUsers && isText(requirements.firstValidationUsers.count), `routes[${index}].firstValidationUsers.count为空`);
+    validateComparableRequirement(requirements.firstRevenueCycle, `routes[${index}].launchRequirements.firstRevenueCycle`, /个月/, 120);
+    validateComparableRequirement(requirements.firstRevenueAmountRange, `routes[${index}].launchRequirements.firstRevenueAmountRange`, /元/, 10000000);
+    validateComparableRequirement(requirements.minimumWeeklyTime, `routes[${index}].launchRequirements.minimumWeeklyTime`, /小时/, 168);
+    validateComparableRequirement(requirements.minimumValidationBudget, `routes[${index}].launchRequirements.minimumValidationBudget`, /元/, 1000000);
+    assert(requirements.firstValidationUsers, `routes[${index}]缺少firstValidationUsers`);
+    validateComparableRequirement(requirements.firstValidationUsers.count, `routes[${index}].firstValidationUsers.count`, /(人|个团队)/, 10000);
     assert(isText(requirements.firstValidationUsers.channel), `routes[${index}].firstValidationUsers.channel为空`);
+    assert(!String(requirements.firstValidationUsers.channel).includes("待验证"), `routes[${index}].firstValidationUsers.channel不能使用待验证`);
   });
   const requirementSignatures = data.routes.map((route) => {
     const requirements = route.launchRequirements;
@@ -148,12 +166,11 @@ function validateMarket(data, routeIds) {
       requirements.minimumWeeklyTime,
       requirements.minimumValidationBudget,
       requirements.firstValidationUsers.count,
-      requirements.firstValidationUsers.channel,
     ].map((value) => String(value).trim()).join("|");
   });
   assert(
-    new Set(requirementSignatures).size >= 2,
-    "三条路线的launchRequirements不能完全相同",
+    new Set(requirementSignatures).size === 3,
+    "三条路线的可比较launchRequirements组合必须各不相同",
   );
   return data;
 }

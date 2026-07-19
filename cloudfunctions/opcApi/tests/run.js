@@ -131,9 +131,25 @@ async function main() {
       launchRequirements: clone(DEMO_DATA.routes[0].launchRequirements),
     })),
   };
+  duplicatedRequirementsMarket.routes.forEach((route, index) => {
+    route.launchRequirements.firstValidationUsers.channel = `路线${index + 1}渠道`;
+  });
   assert.throws(
     () => validateMarket(duplicatedRequirementsMarket, ["A", "B", "C"]),
-    /launchRequirements不能完全相同/,
+    /可比较launchRequirements组合必须各不相同/,
+  );
+
+  const pendingRequirementsMarket = {
+    routes: DEMO_DATA.routes.map((route) => ({
+      routeId: route.routeId,
+      marketOpportunity: clone(route.marketOpportunity),
+      launchRequirements: clone(route.launchRequirements),
+    })),
+  };
+  pendingRequirementsMarket.routes[0].launchRequirements.minimumWeeklyTime = "待验证";
+  assert.throws(
+    () => validateMarket(pendingRequirementsMarket, ["A", "B", "C"]),
+    /不能使用待验证/,
   );
 
   const invalidPlan = clone(DEMO_DATA.plan);

@@ -29,7 +29,6 @@ function requirementSignature(route) {
     requirements.minimumWeeklyTime,
     requirements.minimumValidationBudget,
     requirements.firstValidationUsers.count,
-    requirements.firstValidationUsers.channel,
   ].join("|");
 }
 
@@ -93,12 +92,15 @@ async function main() {
     validateMarket({ routes: response.data.routes }, ["A", "B", "C"]);
 
     const signatures = response.data.routes.map(requirementSignature);
-    assert(new Set(signatures).size >= 2, "真实AI仍返回完全相同的启动要求");
+    assert.strictEqual(new Set(signatures).size, 3, "真实AI的三组可比较启动要求没有完全区分");
 
     const fittedRoutes = calculateStartupFit(
       response.data.routes,
       clone(DEMO_DATA.session.startupConditions),
     );
+    assert(fittedRoutes.every((route) => (
+      route.startupFit.dimensions.every((dimension) => dimension.status !== "待验证")
+    )), "真实AI仍产生无法计算的启动适配维度");
     assert.strictEqual(new Set(fittedRoutes.map((route) => route.startupFit.conclusion)).size, 3);
     assert.strictEqual(new Set(fittedRoutes.map((route) => route.startupFit.maxGap)).size, 3);
     assert.strictEqual(new Set(fittedRoutes.map((route) => route.startupFit.recommendation)).size, 3);
@@ -109,6 +111,7 @@ async function main() {
       attempts: response.data.aiMeta.attempts,
       uniqueRequirementGroups: new Set(signatures).size,
       fitResults: fittedRoutes.map((route) => route.startupFit.result),
+      allDimensionsComparable: true,
       conclusionsDifferentiated: true,
       maxGapsDifferentiated: true,
       recommendationsDifferentiated: true,
