@@ -1,5 +1,6 @@
 const assert = require("assert");
 const { DEMO_DATA } = require("../miniprogram/utils/demoData");
+const { calculateStartupFit } = require("../miniprogram/utils/startupFitRules");
 
 const SESSION_KEY = "opc_mvp_session";
 const RESULT_KEY = "opc_mvp_result";
@@ -51,6 +52,17 @@ async function waitFor(condition, timeoutMs = 2000) {
 }
 
 async function main() {
+  const duplicatedRequirementRoutes = clone(DEMO_DATA.routes);
+  duplicatedRequirementRoutes.forEach((route) => {
+    route.launchRequirements = clone(DEMO_DATA.routes[0].launchRequirements);
+  });
+  const sameReachableConditions = clone(DEMO_DATA.session.startupConditions);
+  sameReachableConditions.reachableUsersByRoute = { A: "0人", B: "0人", C: "0人" };
+  const differentiatedFits = calculateStartupFit(duplicatedRequirementRoutes, sameReachableConditions);
+  assert.strictEqual(new Set(differentiatedFits.map((route) => route.startupFit.conclusion)).size, 3);
+  assert.strictEqual(new Set(differentiatedFits.map((route) => route.startupFit.maxGap)).size, 3);
+  assert.strictEqual(new Set(differentiatedFits.map((route) => route.startupFit.recommendation)).size, 3);
+
   const storage = new Map();
   const ui = { navigationUrl: "", toast: "", modal: null, loading: false };
   let cloudShouldFail = false;
@@ -180,6 +192,7 @@ async function main() {
     day1StateRestored: true,
     fallbackPlanGenerated: true,
     fallbackPlanDayCount: fallbackPlan.days.length,
+    duplicatedRequirementsStillDifferentiated: true,
   }, null, 2));
 }
 

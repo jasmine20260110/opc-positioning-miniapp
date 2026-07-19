@@ -140,6 +140,21 @@ function validateMarket(data, routeIds) {
     assert(requirements.firstValidationUsers && isText(requirements.firstValidationUsers.count), `routes[${index}].firstValidationUsers.count为空`);
     assert(isText(requirements.firstValidationUsers.channel), `routes[${index}].firstValidationUsers.channel为空`);
   });
+  const requirementSignatures = data.routes.map((route) => {
+    const requirements = route.launchRequirements;
+    return [
+      requirements.firstRevenueCycle,
+      requirements.firstRevenueAmountRange,
+      requirements.minimumWeeklyTime,
+      requirements.minimumValidationBudget,
+      requirements.firstValidationUsers.count,
+      requirements.firstValidationUsers.channel,
+    ].map((value) => String(value).trim()).join("|");
+  });
+  assert(
+    new Set(requirementSignatures).size >= 2,
+    "三条路线的launchRequirements不能完全相同",
+  );
   return data;
 }
 

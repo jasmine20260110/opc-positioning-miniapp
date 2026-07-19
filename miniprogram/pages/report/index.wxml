@@ -152,6 +152,7 @@
           <view class="dimension-reason">{{dimension.reason}}</view>
         </view>
       </view>
+      <view class="fit-conclusion">{{item.startupFit.conclusion}}</view>
       <view class="gap-box">
         <view><text class="gap-label">最大缺口</text>{{item.startupFit.maxGap}}</view>
         <view class="recommendation"><text class="gap-label">补足建议</text>{{item.startupFit.recommendation}}</view>

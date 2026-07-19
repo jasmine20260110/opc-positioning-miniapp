@@ -143,17 +143,22 @@ Page({
     const session = wx.getStorageSync(SESSION_KEY) || {};
     const storedConditions = wx.getStorageSync(CONDITIONS_KEY) || {};
     this.result = clone(result);
+    const conditions = mergeConditions(this.result, session, storedConditions);
     this.fitCalculated = Boolean(
       session.behavior
       && session.behavior.startupFitViewed
       && this.result.routes.every((route) => route.startupFit),
     );
+    const requestedMode = options.mode || "evidence";
+    if (requestedMode === "fit" && this.fitCalculated) {
+      this.result.routes = calculateStartupFit(this.result.routes, conditions);
+      wx.setStorageSync(RESULT_KEY, this.result);
+    }
     this.setData({
       evidence: this.result.evidence,
       routes: this.result.routes.map(decorateRoute),
-      conditions: mergeConditions(this.result, session, storedConditions),
+      conditions,
     });
-    const requestedMode = options.mode || "evidence";
     this.setMode(requestedMode === "fit" && !this.fitCalculated ? "startup" : requestedMode);
   },
 

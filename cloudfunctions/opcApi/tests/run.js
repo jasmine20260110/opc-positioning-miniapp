@@ -124,6 +124,18 @@ async function main() {
   invalidMarket.routes[0].marketOpportunity.demandEvidenceStrength.result = "非常强";
   assert.throws(() => validateMarket(invalidMarket, ["A", "B", "C"]), /demandEvidenceStrength.result无效/);
 
+  const duplicatedRequirementsMarket = {
+    routes: DEMO_DATA.routes.map((route) => ({
+      routeId: route.routeId,
+      marketOpportunity: clone(route.marketOpportunity),
+      launchRequirements: clone(DEMO_DATA.routes[0].launchRequirements),
+    })),
+  };
+  assert.throws(
+    () => validateMarket(duplicatedRequirementsMarket, ["A", "B", "C"]),
+    /launchRequirements不能完全相同/,
+  );
+
   const invalidPlan = clone(DEMO_DATA.plan);
   invalidPlan.days = invalidPlan.days.slice(0, 6);
   assert.throws(() => validatePlan(invalidPlan), /正好包含Day 1—Day 7/);

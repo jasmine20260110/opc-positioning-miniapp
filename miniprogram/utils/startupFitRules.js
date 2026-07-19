@@ -215,7 +215,28 @@ function compareBudget(requirements, conditions) {
   );
 }
 
-function summarizeFit(dimensions) {
+function buildRouteRecommendation(route, gap) {
+  const routeName = route.routeName || `路线${route.routeId || ""}`;
+  const action = route.minValidationAction || "完成一次最小验证动作";
+  const audience = route.targetAudience || "目标用户";
+  const requirements = route.launchRequirements || {};
+  const userChannel = requirements.firstValidationUsers
+    && requirements.firstValidationUsers.channel;
+
+  if (!gap) {
+    return `先围绕“${routeName}”执行“${action}”，确认真实需求和付费信号后再扩大投入。`;
+  }
+
+  const recommendations = {
+    "首笔变现": `先执行“${action}”，向${audience}确认一次真实付费意愿；没有付费信号前不扩大投入。`,
+    "稳定投入时间": `把“${action}”拆成一个本周能完成的版本，并为“${routeName}”固定两个执行时间块。`,
+    "首批用户资源": `先通过${userChannel || "一个明确渠道"}找到第1位${audience}，完成“${action}”。`,
+    "验证预算": `围绕“${action}”改用免费工具或更小样本，先验证“${routeName}”的核心假设。`,
+  };
+  return recommendations[gap.name] || gap.recommendation;
+}
+
+function summarizeFit(route, dimensions) {
   const scores = dimensions.map((item) => item.internalScore);
   let result;
   if (scores.includes(0)) result = "暂缓";
@@ -226,11 +247,20 @@ function summarizeFit(dimensions) {
   const gap = dimensions.find((item) => item.internalScore === 0)
     || dimensions.find((item) => item.internalScore === 1)
     || dimensions.find((item) => item.internalScore === null);
+  const routeName = route.routeName || `路线${route.routeId || ""}`;
+  const strongest = dimensions.find((item) => item.internalScore === 2);
+  const conclusionParts = [`“${routeName}”当前结论为${result}`];
+  if (gap) conclusionParts.push(`应先处理${gap.name}`);
+  else conclusionParts.push("当前启动条件基本满足");
+  if (strongest && gap) conclusionParts.push(`可先利用${strongest.name}这一已有条件`);
 
   return {
     result,
-    maxGap: gap ? `${gap.name}：${gap.reason}` : "暂无明显启动条件缺口；市场需求仍待验证。",
-    recommendation: gap ? gap.recommendation : "保持低投入，先完成一次需求和付费验证。",
+    conclusion: `${conclusionParts.join("；")}。`,
+    maxGap: gap
+      ? `${routeName}的${gap.name}：${gap.reason}`
+      : `${routeName}暂无明显启动条件缺口；市场需求仍待验证。`,
+    recommendation: buildRouteRecommendation(route, gap),
   };
 }
 
@@ -242,7 +272,7 @@ function calculateRouteStartupFit(route, conditions) {
     compareUsers(route, requirements, conditions),
     compareBudget(requirements, conditions),
   ];
-  const summary = summarizeFit(dimensions);
+  const summary = summarizeFit(route, dimensions);
 
   return {
     dimensions: dimensions.map(({ recommendation, ...dimension }) => dimension),

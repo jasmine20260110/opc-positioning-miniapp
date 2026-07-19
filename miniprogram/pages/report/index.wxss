@@ -288,6 +288,16 @@
   font-weight: 650;
 }
 
+.fit-conclusion {
+  margin-top: 20rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 14rpx;
+  background: #f5f1ec;
+  color: #302d2b;
+  font-size: 27rpx;
+  line-height: 1.65;
+}
+
 .recommendation {
   margin-top: 12rpx;
 }

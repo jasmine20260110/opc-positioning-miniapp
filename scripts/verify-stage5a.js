@@ -88,6 +88,9 @@ async function main() {
     assert(results.join("|") === "优先验证|补足后验证|暂缓", `三条路线结果不符合预期：${results.join("|")}`);
     assert((await page.$$(".dimension-item")).length === 12, "每条路线必须显示4项适配状态");
     assert(routes.every((route) => route.startupFit.maxGap && route.startupFit.recommendation), "路线缺少最大缺口或补足建议");
+    assert(new Set(routes.map((route) => route.startupFit.conclusion)).size === 3, "三条路线的结论说明不应相同");
+    assert(new Set(routes.map((route) => route.startupFit.maxGap)).size === 3, "三条路线的最大缺口不应相同");
+    assert(new Set(routes.map((route) => route.startupFit.recommendation)).size === 3, "三条路线的补足建议不应相同");
     const reportText = await (await page.$(".report-screen")).text();
     assert(!reportText.includes("internalScore") && !reportText.includes("internal_score"), "页面暴露了内部精确分数字段");
 
