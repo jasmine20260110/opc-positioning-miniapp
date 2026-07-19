@@ -1,0 +1,169 @@
+<view class="screen report-screen">
+  <view class="step-eyebrow">{{meta.step}}</view>
+  <view class="page-title">{{meta.title}}</view>
+  <view class="page-subtitle">{{meta.subtitle}}</view>
+
+  <block wx:if="{{mode === 'evidence'}}">
+    <view class="card evidence-summary">
+      <view class="section-title">你的心流证据</view>
+      <view wx:for="{{evidence.flowEvidence}}" wx:key="sourceAnswerId" class="evidence-item">
+        <view class="evidence-head">
+          <text>{{item.claim}}</text>
+          <text class="evidence-tag">{{item.evidenceType}}</text>
+        </view>
+        <view class="quote">{{item.sourceAnswerId}}｜“{{item.sourceQuote}}”</view>
+      </view>
+    </view>
+
+    <view class="card evidence-summary">
+      <view class="section-title">你的优势证据</view>
+      <view wx:for="{{evidence.strengthEvidence}}" wx:key="sourceAnswerId" class="evidence-item">
+        <view class="evidence-head">
+          <text>{{item.claim}}</text>
+          <text class="evidence-tag">{{item.evidenceType}}</text>
+        </view>
+        <view class="quote">{{item.sourceAnswerId}}｜“{{item.sourceQuote}}”</view>
+      </view>
+    </view>
+
+    <view class="background-strip">
+      <text>{{evidence.background.careerStatus}}</text>
+      <text>每周可投入 {{evidence.background.weeklyAvailableTime}}</text>
+    </view>
+
+    <view class="route-heading">3条候选路线预览</view>
+    <view wx:for="{{routes}}" wx:key="routeId" class="card route-preview">
+      <view class="route-topline">
+        <text class="route-id">路线 {{item.routeId}}</text>
+        <text class="sufficiency">证据充分度：{{item.evidenceSufficiency}}</text>
+      </view>
+      <view class="route-name">{{item.routeName}}</view>
+      <view class="route-one-liner">{{item.oneLiner}}</view>
+      <view class="detail-row"><text class="detail-label">目标用户</text><text>{{item.targetAudience}}</text></view>
+      <view class="detail-row"><text class="detail-label">解决问题</text><text>{{item.problemSolved}}</text></view>
+      <view class="detail-row"><text class="detail-label">变现方式</text><text>{{item.monetizationPath}}</text></view>
+      <view class="risk-row">最大风险：{{item.maxRisk}}</view>
+    </view>
+
+    <view class="button-stack">
+      <button class="main-button" bindtap="onShowMarket">继续看市场机会</button>
+      <button class="secondary-button" bindtap="onEditAnswers">返回修改20题</button>
+    </view>
+  </block>
+
+  <block wx:if="{{mode === 'market'}}">
+    <scroll-view class="route-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+      <view class="route-scroll-inner">
+        <view wx:for="{{routes}}" wx:key="routeId" class="market-card">
+          <view class="route-id">路线 {{item.routeId}}</view>
+          <view class="market-name">{{item.routeName}}</view>
+          <view wx:for="{{item.marketRows}}" wx:for-item="field" wx:key="label" class="market-field">
+            <view class="market-label">{{field.label}}</view>
+            <view class="market-value">{{field.value}}</view>
+            <view class="market-basis">{{field.basis}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="scroll-tip">左右滑动比较3条路线</view>
+    <view class="button-stack">
+      <button class="main-button" bindtap="onShowStartup">确认我的启动条件</button>
+      <button class="secondary-button" bindtap="onBackEvidence">返回看证据</button>
+    </view>
+  </block>
+
+  <block wx:if="{{mode === 'startup'}}">
+    <view class="card condition-card">
+      <view class="condition-index">01</view>
+      <view class="section-title">收入底线</view>
+      <view class="picker-row">
+        <text>最晚看到首笔收入</text>
+        <picker range="{{latestRevenueOptions}}" bindchange="onRevenueCycleChange">
+          <view class="picker-value">{{conditions.incomeFloor.latestFirstRevenue}} ›</view>
+        </picker>
+      </view>
+      <view class="picker-row">
+        <text>有意义的最低金额</text>
+        <picker range="{{amountOptions}}" bindchange="onRevenueAmountChange">
+          <view class="picker-value">{{conditions.incomeFloor.minimumMeaningfulAmount}} ›</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card condition-card">
+      <view class="condition-index">02</view>
+      <view class="section-title">稳定投入时间</view>
+      <picker range="{{weeklyTimeOptions}}" bindchange="onWeeklyTimeChange">
+        <view class="large-picker">每周 {{conditions.weeklyAvailableTime}} <text>›</text></view>
+      </picker>
+      <view class="section-note">已根据第20题预填，你可以修改。</view>
+    </view>
+
+    <view class="card condition-card">
+      <view class="condition-index">03</view>
+      <view class="section-title">首批用户资源</view>
+      <view wx:for="{{routes}}" wx:key="routeId" class="picker-row">
+        <text>路线{{item.routeId}} · {{item.routeName}}</text>
+        <picker range="{{reachableOptions}}" data-route="{{item.routeId}}" bindchange="onReachableChange">
+          <view class="picker-value">{{conditions.reachableUsersByRoute[item.routeId]}} ›</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card condition-card">
+      <view class="condition-index">04</view>
+      <view class="section-title">验证预算与补足方式</view>
+      <view class="picker-row">
+        <text>可投入预算</text>
+        <picker range="{{budgetOptions}}" bindchange="onBudgetChange">
+          <view class="picker-value">{{conditions.validationResources.budget}} ›</view>
+        </picker>
+      </view>
+      <view class="picker-row">
+        <text>资源不足时</text>
+        <picker range="{{supplementOptions}}" bindchange="onSupplementChange">
+          <view class="picker-value">{{conditions.validationResources.supplementMethod}} ›</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="static-note">阶段二使用固定适配结果；以上控件用于验证页面交互，规则计算将在后续阶段接入。</view>
+    <view class="button-stack">
+      <button class="main-button" bindtap="onShowFit">生成个人启动适配</button>
+      <button class="secondary-button" bindtap="onBackMarket">返回市场机会</button>
+    </view>
+  </block>
+
+  <block wx:if="{{mode === 'fit'}}">
+    <view wx:for="{{routes}}" wx:key="routeId" class="card fit-card">
+      <view class="fit-head">
+        <view>
+          <view class="route-id">路线 {{item.routeId}}</view>
+          <view class="fit-name">{{item.routeName}}</view>
+        </view>
+        <view class="fit-result status-{{item.fitResultClass}}">{{item.startupFit.result}}</view>
+      </view>
+      <view class="dimension-grid">
+        <view wx:for="{{item.fitDimensions}}" wx:for-item="dimension" wx:key="name" class="dimension-item">
+          <view class="dimension-top">
+            <text>{{dimension.name}}</text>
+            <text class="status-text status-{{dimension.statusClass}}">{{dimension.status}}</text>
+          </view>
+          <view class="dimension-reason">{{dimension.reason}}</view>
+        </view>
+      </view>
+      <view class="gap-box">
+        <view><text class="gap-label">最大缺口</text>{{item.startupFit.maxGap}}</view>
+        <view class="recommendation"><text class="gap-label">补足建议</text>{{item.startupFit.recommendation}}</view>
+      </view>
+      <button class="route-select-button" data-route="{{item.routeId}}" bindtap="onSelectRoute">选择这条路线</button>
+    </view>
+
+    <view class="button-stack">
+      <button class="secondary-button" bindtap="onSkipSelection">暂不选择</button>
+      <button class="secondary-button" bindtap="onBackStartup">返回修改启动条件</button>
+    </view>
+  </block>
+
+  <view class="disclaimer">本工具提供的建议仅供方向验证参考，不构成职业、投资或人生决策依据。</view>
+</view>

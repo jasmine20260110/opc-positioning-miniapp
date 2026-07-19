@@ -1,0 +1,73 @@
+const { DEMO_DATA } = require("../../utils/demoData");
+const { PLAN_KEY, buildFixedPlan } = require("../../utils/fixedPlan");
+
+const RESULT_KEY = "opc_mvp_result";
+const SESSION_KEY = "opc_mvp_session";
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+Page({
+  data: {
+    route: {},
+    plan: {},
+    otherRoutes: [],
+    started: false,
+  },
+
+  onLoad(options) {
+    const result = clone(wx.getStorageSync(RESULT_KEY) || DEMO_DATA);
+    const session = wx.getStorageSync(SESSION_KEY) || {};
+    const routeId = options.routeId || session.selectedRouteId || result.session.selectedRouteId || "A";
+    const route = result.routes.find((item) => item.routeId === routeId) || result.routes[0];
+    const storedPlan = wx.getStorageSync(PLAN_KEY);
+    const plan = storedPlan && storedPlan.selectedRouteId === route.routeId
+      ? storedPlan
+      : buildFixedPlan(route, session.startupConditions || result.session.startupConditions);
+
+    if (!storedPlan || storedPlan.selectedRouteId !== route.routeId) {
+      wx.setStorageSync(PLAN_KEY, plan);
+    }
+
+    this.routeId = route.routeId;
+    this.setData({
+      route,
+      plan,
+      otherRoutes: result.routes
+        .filter((item) => item.routeId !== route.routeId)
+        .map((item) => ({
+          routeId: item.routeId,
+          routeName: item.routeName,
+          reason: `当前结论：${item.startupFit.result}；主要缺口是${item.startupFit.maxGap}。`,
+        })),
+      started: Boolean(
+        session.behavior
+        && session.behavior.day1Started
+        && session.behavior.day1RouteId === route.routeId,
+      ),
+    });
+  },
+
+  onStartDay1() {
+    const session = wx.getStorageSync(SESSION_KEY) || {};
+    session.behavior = session.behavior || {};
+    session.behavior.day1Started = true;
+    session.behavior.day1RouteId = this.routeId;
+    session.behavior.day1StartedAt = new Date().toISOString();
+    session.currentStep = "plan";
+    session.updatedAt = session.behavior.day1StartedAt;
+    wx.setStorageSync(SESSION_KEY, session);
+
+    const plan = wx.getStorageSync(PLAN_KEY) || this.data.plan;
+    plan.day1Started = true;
+    plan.day1StartedAt = session.behavior.day1StartedAt;
+    wx.setStorageSync(PLAN_KEY, plan);
+    this.setData({ started: true, plan });
+    wx.showToast({ title: "Day 1已开始", icon: "success" });
+  },
+
+  onBackToRoutes() {
+    wx.navigateBack({ delta: 1 });
+  },
+});

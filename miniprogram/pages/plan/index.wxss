@@ -1,0 +1,212 @@
+.plan-screen {
+  padding-bottom: 72rpx;
+}
+
+.selected-route-card {
+  margin-top: 32rpx;
+  padding: 36rpx 32rpx;
+  border-radius: 28rpx;
+  background: #2c2825;
+  color: #ffffff;
+  box-shadow: 0 16rpx 38rpx rgba(47, 37, 31, 0.18);
+}
+
+.selected-label {
+  color: #f2a69f;
+  font-size: 21rpx;
+  font-weight: 650;
+  letter-spacing: 1rpx;
+}
+
+.selected-name {
+  margin-top: 14rpx;
+  font-size: 42rpx;
+  font-weight: 750;
+}
+
+.selected-copy {
+  margin-top: 14rpx;
+  color: #d7cfca;
+  font-size: 25rpx;
+  line-height: 1.65;
+}
+
+.reason-block {
+  margin-top: 28rpx;
+  padding: 24rpx;
+  border: 1rpx solid #554d48;
+  border-radius: 18rpx;
+  background: #37322f;
+}
+
+.reason-title {
+  color: #ffffff;
+  font-size: 25rpx;
+  font-weight: 650;
+}
+
+.reason-item {
+  margin-top: 13rpx;
+  color: #d4cbc6;
+  font-size: 22rpx;
+  line-height: 1.55;
+}
+
+.risk-block {
+  margin-top: 24rpx;
+  color: #dfd5cf;
+  font-size: 22rpx;
+  line-height: 1.65;
+}
+
+.risk-block view + view {
+  margin-top: 10rpx;
+}
+
+.risk-block text {
+  display: inline-block;
+  width: 120rpx;
+  color: #f2a69f;
+  font-weight: 650;
+}
+
+.plan-heading {
+  margin-top: 52rpx;
+  color: #282421;
+  font-size: 38rpx;
+  font-weight: 750;
+}
+
+.plan-goal {
+  margin-top: 14rpx;
+  color: #776f69;
+  font-size: 24rpx;
+  line-height: 1.65;
+}
+
+.plan-source {
+  margin-top: 18rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 14rpx;
+  font-size: 21rpx;
+  line-height: 1.55;
+}
+
+.source-ai {
+  background: #eaf5ee;
+  color: #2d7047;
+}
+
+.source-fixed {
+  background: #fff4dc;
+  color: #80601c;
+}
+
+.day-card {
+  margin-top: 24rpx;
+  padding: 30rpx;
+  border: 1rpx solid #e4dbd4;
+  border-radius: 24rpx;
+  background: #ffffff;
+}
+
+.day-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.day-number {
+  color: #c83f36;
+  font-size: 21rpx;
+  font-weight: 750;
+  letter-spacing: 2rpx;
+}
+
+.day-time {
+  padding: 7rpx 13rpx;
+  border-radius: 999rpx;
+  background: #f0ece8;
+  color: #756d67;
+  font-size: 19rpx;
+}
+
+.day-goal {
+  margin-top: 14rpx;
+  color: #2d2926;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.day-section {
+  margin-top: 22rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eee7e2;
+}
+
+.day-label {
+  color: #9e3731;
+  font-size: 21rpx;
+  font-weight: 650;
+}
+
+.day-content {
+  margin-top: 8rpx;
+  color: #57504b;
+  font-size: 24rpx;
+  line-height: 1.65;
+}
+
+.evidence-section .day-label {
+  color: #2d7047;
+}
+
+.fallback {
+  margin-top: 20rpx;
+  padding: 16rpx 18rpx;
+  border-radius: 13rpx;
+  background: #fff4dc;
+  color: #80601c;
+  font-size: 21rpx;
+  line-height: 1.55;
+}
+
+.why-matters {
+  margin-top: 14rpx;
+  color: #80766f;
+  font-size: 20rpx;
+  line-height: 1.55;
+}
+
+.other-heading {
+  margin-top: 48rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.other-route {
+  margin-top: 18rpx;
+  padding: 24rpx;
+  border-radius: 18rpx;
+  background: #ece7e2;
+}
+
+.other-name {
+  color: #49433f;
+  font-size: 24rpx;
+  font-weight: 650;
+}
+
+.other-reason {
+  margin-top: 8rpx;
+  color: #7b736d;
+  font-size: 21rpx;
+  line-height: 1.55;
+}
+
+.plan-note {
+  margin-top: 28rpx;
+  color: #837a73;
+  font-size: 22rpx;
+  line-height: 1.65;
+}

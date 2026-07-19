@@ -1,0 +1,55 @@
+<view class="screen question-screen">
+  <view class="step-eyebrow">第一步 · 定位问答</view>
+  <view class="question-meta">
+    <text>{{currentIndex + 1}} / 20</text>
+    <text>{{demoMode ? '示例数据模式' : '当前会话自动保存'}}</text>
+  </view>
+  <view class="progress-track">
+    <view class="progress-value" style="width: {{progressPercent}}%;"></view>
+  </view>
+
+  <view class="question-card">
+    <view class="module-tag">{{question.module}}</view>
+    <view class="question-title">{{question.questionText}}</view>
+    <view class="question-intent">探索提示：{{question.intent}}</view>
+
+    <textarea
+      wx:if="{{question.questionType === 'text'}}"
+      class="answer-input"
+      value="{{answer}}"
+      maxlength="-1"
+      placeholder="请尽量写一个真实、具体的经历"
+      bindinput="onTextInput"
+    ></textarea>
+
+    <view wx:if="{{question.questionType === 'choice' || question.questionType === 'mixed'}}" class="option-list">
+      <view
+        wx:for="{{question.options}}"
+        wx:key="*this"
+        class="option-item {{choiceValue === item ? 'option-active' : ''}}"
+        data-value="{{item}}"
+        bindtap="onSelectOption"
+      >
+        <view class="option-dot"></view>
+        <text>{{item}}</text>
+      </view>
+    </view>
+
+    <textarea
+      wx:if="{{question.questionType === 'mixed'}}"
+      class="answer-input mixed-input"
+      value="{{detailValue}}"
+      maxlength="-1"
+      placeholder="补充你的判断依据（选填）"
+      bindinput="onDetailInput"
+    ></textarea>
+
+    <view wx:if="{{question.suggestedChars}}" class="input-note">建议约{{question.suggestedChars}}字，不强制</view>
+    <view wx:if="{{suggestion}}" class="suggestion">{{suggestion}}</view>
+  </view>
+
+  <view class="question-actions">
+    <button class="secondary-button half-button" disabled="{{isFirst}}" bindtap="onPrevious">上一题</button>
+    <button class="main-button half-button" bindtap="onNext">{{isLast ? '提交并分析' : '下一题'}}</button>
+  </view>
+</view>

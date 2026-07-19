@@ -1,27 +1,125 @@
-/**app.wxss**/
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+page {
+  min-height: 100%;
+  background: #f5f1ec;
+  color: #2d2926;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+}
+
+view,
+text,
+button,
+input,
+textarea,
+picker {
   box-sizing: border-box;
-} 
+}
 
 button {
-  background: initial;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  line-height: 1.4;
 }
 
-button:focus{
-  outline: 0;
+button::after {
+  border: 0;
 }
 
-button::after{
-  border: none;
+.screen {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40rpx 32rpx 64rpx;
 }
 
+.step-eyebrow {
+  color: #be3a32;
+  font-size: 24rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
 
-page {
-  background: #f6f6f6;
+.page-title {
+  margin-top: 14rpx;
+  color: #211e1c;
+  font-size: 48rpx;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.page-subtitle {
+  margin-top: 16rpx;
+  color: #716a65;
+  font-size: 27rpx;
+  line-height: 1.7;
+}
+
+.card {
+  margin-top: 24rpx;
+  padding: 32rpx;
+  border: 1rpx solid #e7dfd8;
+  border-radius: 24rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 30rpx rgba(70, 52, 41, 0.06);
+}
+
+.section-title {
+  color: #2b2724;
+  font-size: 32rpx;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.section-note {
+  margin-top: 8rpx;
+  color: #8a817a;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.main-button,
+.secondary-button {
   display: flex;
+  width: 100%;
+  height: 96rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.main-button {
+  background: #c83f36;
+  color: #ffffff;
+  box-shadow: 0 12rpx 24rpx rgba(200, 63, 54, 0.2);
+}
+
+.main-button[disabled] {
+  background: #d5cbc4;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.secondary-button {
+  border: 2rpx solid #d8cec6;
+  background: #ffffff;
+  color: #4f4843;
+}
+
+.button-stack {
+  display: flex;
+  margin-top: 32rpx;
   flex-direction: column;
-  justify-content: flex-start;
+  gap: 20rpx;
+}
+
+.disclaimer {
+  margin-top: 32rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  background: #ece7e2;
+  color: #77706a;
+  font-size: 22rpx;
+  line-height: 1.7;
 }

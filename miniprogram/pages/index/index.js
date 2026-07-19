@@ -1,185 +1,120 @@
-// index.js
+const { SAMPLE_ANSWERS } = require("../../utils/demoData");
+const { createQuestionSession } = require("../../utils/questionSession");
+
+const SESSION_KEY = "opc_mvp_session";
+const RESULT_KEY = "opc_mvp_result";
+const CONDITIONS_KEY = "opc_mvp_conditions";
+const PLAN_KEY = "opc_mvp_plan";
+const QUESTION_URL = "/pages/question/index";
+
+function getResumeDestination(session, result, plan) {
+  if (!session) return { url: QUESTION_URL, label: "开始定位" };
+
+  const step = session.currentStep;
+  if (step === "plan" && result && result.routes && (plan || result.plan)) {
+    const routeId = session.selectedRouteId
+      || (plan && plan.selectedRouteId)
+      || (result.plan && result.plan.selectedRouteId)
+      || "A";
+    return { url: `/pages/plan/index?routeId=${routeId}`, label: "继续7天计划" };
+  }
+  if (["fit", "startup_fit"].includes(step) && result && result.routes) {
+    return { url: "/pages/report/index?mode=fit", label: "继续查看启动适配" };
+  }
+  if (["evidence", "market", "startup"].includes(step) && result && result.routes) {
+    return { url: `/pages/report/index?mode=${step}`, label: "继续查看定位结果" };
+  }
+  if (step === "analyzing" && session.answers && Object.keys(session.answers).length === 20) {
+    return { url: "/pages/loading/index", label: "继续AI分析" };
+  }
+
+  if (session.selectedRouteId && result && result.routes && (plan || result.plan)) {
+    return {
+      url: `/pages/plan/index?routeId=${session.selectedRouteId}`,
+      label: "继续7天计划",
+    };
+  }
+  if (result && result.routes) {
+    return { url: "/pages/report/index?mode=evidence", label: "继续查看定位结果" };
+  }
+
+  const currentIndex = Number.isInteger(session.currentQuestionIndex)
+    ? session.currentQuestionIndex
+    : Number.isInteger(session.currentIndex) ? session.currentIndex : 0;
+  return {
+    url: QUESTION_URL,
+    label: currentIndex > 0 ? `继续第${currentIndex + 1}题` : "继续定位",
+  };
+}
+
+function createSession(demoMode) {
+  return createQuestionSession({
+    demoMode,
+    answers: demoMode ? { ...SAMPLE_ANSWERS } : {},
+  });
+}
+
 Page({
   data: {
-    showTip: false,
-    powerList: [
-      {
-        title: "云托管",
-        tip: "不限语言的全托管容器服务",
-        showItem: false,
-        item: [
-          {
-            type: "cloudbaserun",
-            title: "云托管调用",
-          },
-        ],
-      },
-      {
-        title: "云函数",
-        tip: "安全、免鉴权运行业务代码",
-        showItem: false,
-        item: [
-          {
-            type: "getOpenId",
-            title: "获取OpenId",
-          },
-          {
-            type: "getMiniProgramCode",
-            title: "生成小程序码",
-          },
-        ],
-      },
-      {
-        title: "数据库",
-        tip: "安全稳定的文档型数据库",
-        showItem: false,
-        item: [
-          {
-            type: "createCollection",
-            title: "创建集合",
-          },
-          {
-            type: "selectRecord",
-            title: "增删改查记录",
-          },
-          // {
-          //   title: '聚合操作',
-          //   page: 'sumRecord',
-          // },
-        ],
-      },
-      {
-        title: "云存储",
-        tip: "自带CDN加速文件存储",
-        showItem: false,
-        item: [
-          {
-            type: "uploadFile",
-            title: "上传文件",
-          },
-        ],
-      },
-      {
-        title: "AI 接入能力",
-        tip: "云开发 AI 接入能力",
-        showItem: false,
-        item: [
-          {
-            type: "model-guide",
-            title: "大模型对话指引",
-          },
-        ],
-      },
-      {
-        title: "AI 智能开发小程序",
-        tip: "连接 AI 开发工具与 MCP 开发小程序",
-        type: "ai-assistant",
-        skipEnvCheck: true,
-        showItem: false,
-        item: [],
-      },
-    ],
-    haveCreateCollection: false,
-    title: "",
-    content: "",
-  },
-  onClickPowerInfo(e) {
-    const app = getApp();
-    const index = e.currentTarget.dataset.index;
-    const powerList = this.data.powerList;
-    const selectedItem = powerList[index];
-    
-    // 检查是否跳过环境配置检测
-    if (!selectedItem.skipEnvCheck && !app.globalData.env) {
-      wx.showModal({
-        title: "提示",
-        content: "请在 `miniprogram/app.js` 中正确配置 `env` 参数",
-      });
-      return;
-    }
-    if (selectedItem.link) {
-      wx.navigateTo({
-        url: `../web/index?url=${selectedItem.link}&title=${selectedItem.title}`,
-      });
-    } else if (selectedItem.type) {
-      wx.navigateTo({
-        url: `/pages/example/index?envId=${this.data.selectedEnv?.envId}&type=${selectedItem.type}`,
-      });
-    } else if (selectedItem.page) {
-      wx.navigateTo({
-        url: `/pages/${selectedItem.page}/index`,
-      });
-    } else if (
-      selectedItem.title === "数据库" &&
-      !this.data.haveCreateCollection
-    ) {
-      this.onClickDatabase(powerList, selectedItem);
-    } else {
-      selectedItem.showItem = !selectedItem.showItem;
-      this.setData({
-        powerList,
-      });
-    }
+    hasSavedSession: false,
+    demoStarting: false,
+    primaryButtonText: "开始定位",
   },
 
-  jumpPage(e) {
-    const { type, page } = e.currentTarget.dataset;
-    console.log("jump page", type, page);
-    if (type) {
-      wx.navigateTo({
-        url: `/pages/example/index?envId=${this.data.selectedEnv?.envId}&type=${type}`,
-      });
-    } else {
-      wx.navigateTo({
-        url: `/pages/${page}/index?envId=${this.data.selectedEnv?.envId}`,
-      });
-    }
-  },
-
-  onClickDatabase(powerList, selectedItem) {
-    wx.showLoading({
-      title: "",
+  onShow() {
+    const session = wx.getStorageSync(SESSION_KEY);
+    const result = wx.getStorageSync(RESULT_KEY);
+    const plan = wx.getStorageSync(PLAN_KEY);
+    const destination = getResumeDestination(session, result, plan);
+    this.setData({
+      hasSavedSession: Boolean(session),
+      demoStarting: false,
+      primaryButtonText: destination.label,
     });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "createCollection",
-        },
-      })
-      .then((resp) => {
-        if (resp.result.success) {
-          this.setData({
-            haveCreateCollection: true,
-          });
-        }
-        selectedItem.showItem = !selectedItem.showItem;
-        this.setData({
-          powerList,
+  },
+
+  openPage(url) {
+    wx.navigateTo({
+      url,
+      fail: () => {
+        wx.reLaunch({
+          url,
+          fail: () => {
+            this.setData({ demoStarting: false });
+            wx.showModal({
+              title: "页面打开失败",
+              content: "请在微信开发者工具中重新编译后再试。",
+              showCancel: false,
+            });
+          },
         });
-        wx.hideLoading();
-      })
-      .catch((e) => {
-        wx.hideLoading();
-        const { errCode, errMsg } = e;
-        if (errMsg.includes("Environment not found")) {
-          this.setData({
-            showTip: true,
-            title: "云开发环境未找到",
-            content:
-              "如果已经开通云开发，请检查环境ID与 `miniprogram/app.js` 中的 `env` 参数是否一致。",
-          });
-          return;
-        }
-        if (errMsg.includes("FunctionName parameter could not be found")) {
-          this.setData({
-            showTip: true,
-            title: "请上传云函数",
-            content:
-              "在'cloudfunctions/quickstartFunctions'目录右键，选择【上传并部署-云端安装依赖】，等待云函数上传完成后重试。",
-          });
-          return;
-        }
-      });
+      },
+    });
+  },
+
+  onStart() {
+    let session = wx.getStorageSync(SESSION_KEY);
+    if (!session) {
+      session = createSession(false);
+      wx.setStorageSync(SESSION_KEY, session);
+    }
+    const destination = getResumeDestination(
+      session,
+      wx.getStorageSync(RESULT_KEY),
+      wx.getStorageSync(PLAN_KEY),
+    );
+    this.openPage(destination.url);
+  },
+
+  onUseDemo() {
+    if (this.data.demoStarting) return;
+    this.setData({ demoStarting: true });
+    wx.removeStorageSync(RESULT_KEY);
+    wx.removeStorageSync(CONDITIONS_KEY);
+    wx.removeStorageSync(PLAN_KEY);
+    wx.setStorageSync(SESSION_KEY, createSession(true));
+    this.openPage(QUESTION_URL);
   },
 });
+
+module.exports = { getResumeDestination };

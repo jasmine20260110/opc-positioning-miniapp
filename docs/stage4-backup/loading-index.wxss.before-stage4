@@ -1,0 +1,140 @@
+.loading-screen {
+  display: flex;
+  padding-top: 110rpx;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.loading-orbit {
+  position: relative;
+  display: flex;
+  width: 176rpx;
+  height: 176rpx;
+  align-items: center;
+  justify-content: center;
+}
+
+.orbit-ring {
+  position: absolute;
+  width: 170rpx;
+  height: 170rpx;
+  border: 4rpx solid #e7d5d1;
+  border-top-color: #c83f36;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.orbit-core {
+  display: flex;
+  width: 118rpx;
+  height: 118rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #c83f36;
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 3rpx;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-title {
+  margin-top: 52rpx;
+  color: #25211f;
+  font-size: 42rpx;
+  font-weight: 700;
+}
+
+.loading-copy {
+  max-width: 600rpx;
+  margin-top: 20rpx;
+  color: #7b736d;
+  font-size: 25rpx;
+  line-height: 1.7;
+}
+
+.stage-card {
+  width: 100%;
+  margin-top: 52rpx;
+  padding: 20rpx 30rpx;
+  border: 1rpx solid #e6ddd6;
+  border-radius: 24rpx;
+  background: #ffffff;
+  text-align: left;
+}
+
+.stage-row {
+  display: flex;
+  padding: 24rpx 0;
+  align-items: center;
+  border-bottom: 1rpx solid #eee8e3;
+  gap: 22rpx;
+}
+
+.stage-row:last-child {
+  border-bottom: 0;
+}
+
+.stage-icon {
+  display: flex;
+  width: 42rpx;
+  height: 42rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.stage-done {
+  background: #e1f2e7;
+  color: #287646;
+}
+
+.stage-active {
+  border: 3rpx solid #c83f36;
+  background: #fff5f3;
+}
+
+.stage-pending {
+  border: 3rpx solid #d8d0c9;
+  background: #faf8f6;
+}
+
+.stage-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #c83f36;
+}
+
+.stage-pending .stage-dot {
+  background: #cfc6bf;
+}
+
+.stage-label {
+  color: #827a73;
+  font-size: 27rpx;
+}
+
+.stage-label-active,
+.stage-label-done {
+  color: #332e2b;
+  font-weight: 600;
+}
+
+.demo-note {
+  margin-top: 28rpx;
+  color: #9a9189;
+  font-size: 22rpx;
+}
+
+.demo-button {
+  margin-top: 28rpx;
+}

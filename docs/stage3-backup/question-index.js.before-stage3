@@ -1,0 +1,108 @@
+const { ABSTRACT_ANSWER_HINT, QUESTIONS } = require("../../utils/questions");
+
+const SESSION_KEY = "opc_mvp_session";
+const ABSTRACT_PATTERNS = [/^不知道$/, /^没想过$/, /^都可以$/, /^随便$/, /^没有$/];
+
+Page({
+  data: {
+    currentIndex: 0,
+    question: QUESTIONS[0],
+    answer: "",
+    choiceValue: "",
+    detailValue: "",
+    progressPercent: 5,
+    isFirst: true,
+    isLast: false,
+    suggestion: "",
+    demoMode: false,
+  },
+
+  onLoad() {
+    const session = wx.getStorageSync(SESSION_KEY) || {
+      sessionId: `local-${Date.now()}`,
+      currentIndex: 0,
+      currentStep: "questions",
+      answers: {},
+      demoMode: false,
+    };
+    this.session = session;
+    this.loadQuestion(Math.min(session.currentIndex || 0, QUESTIONS.length - 1));
+  },
+
+  loadQuestion(index) {
+    const question = QUESTIONS[index];
+    const savedAnswer = this.session.answers[question.questionId] || "";
+    const mixedParts = question.questionType === "mixed" ? savedAnswer.split("｜") : [];
+    this.setData({
+      currentIndex: index,
+      question,
+      answer: question.questionType === "text" ? savedAnswer : "",
+      choiceValue: question.questionType === "choice" ? savedAnswer : mixedParts[0] || "",
+      detailValue: question.questionType === "mixed" ? mixedParts.slice(1).join("｜") : "",
+      progressPercent: Math.round(((index + 1) / QUESTIONS.length) * 100),
+      isFirst: index === 0,
+      isLast: index === QUESTIONS.length - 1,
+      suggestion: "",
+      demoMode: Boolean(this.session.demoMode),
+    });
+  },
+
+  onTextInput(e) {
+    this.setData({ answer: e.detail.value, suggestion: "" });
+  },
+
+  onDetailInput(e) {
+    this.setData({ detailValue: e.detail.value, suggestion: "" });
+  },
+
+  onSelectOption(e) {
+    this.setData({ choiceValue: e.currentTarget.dataset.value, suggestion: "" });
+  },
+
+  getCurrentAnswer() {
+    const type = this.data.question.questionType;
+    if (type === "text") return this.data.answer.trim();
+    if (type === "choice") return this.data.choiceValue;
+    return [this.data.choiceValue, this.data.detailValue.trim()].filter(Boolean).join("｜");
+  },
+
+  saveCurrentAnswer() {
+    const answer = this.getCurrentAnswer();
+    if (!answer) {
+      wx.showToast({ title: "请先填写这一题", icon: "none" });
+      return false;
+    }
+
+    this.session.answers[this.data.question.questionId] = answer;
+    this.session.currentIndex = this.data.currentIndex;
+    this.session.updatedAt = new Date().toISOString();
+    wx.setStorageSync(SESSION_KEY, this.session);
+
+    if (ABSTRACT_PATTERNS.some((pattern) => pattern.test(answer))) {
+      this.setData({ suggestion: ABSTRACT_ANSWER_HINT });
+    }
+    return true;
+  },
+
+  onPrevious() {
+    if (this.data.isFirst) return;
+    const answer = this.getCurrentAnswer();
+    if (answer) this.session.answers[this.data.question.questionId] = answer;
+    this.session.currentIndex = this.data.currentIndex - 1;
+    wx.setStorageSync(SESSION_KEY, this.session);
+    this.loadQuestion(this.data.currentIndex - 1);
+  },
+
+  onNext() {
+    if (!this.saveCurrentAnswer()) return;
+    if (this.data.isLast) {
+      this.session.currentStep = "analyzing";
+      wx.setStorageSync(SESSION_KEY, this.session);
+      wx.navigateTo({ url: "/pages/loading/index" });
+      return;
+    }
+    this.session.currentIndex = this.data.currentIndex + 1;
+    wx.setStorageSync(SESSION_KEY, this.session);
+    this.loadQuestion(this.data.currentIndex + 1);
+  },
+});

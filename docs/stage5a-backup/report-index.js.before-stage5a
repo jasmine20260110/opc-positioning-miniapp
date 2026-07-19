@@ -1,0 +1,191 @@
+const { DEMO_DATA } = require("../../utils/demoData");
+
+const RESULT_KEY = "opc_mvp_result";
+const SESSION_KEY = "opc_mvp_session";
+
+const MODE_META = {
+  evidence: {
+    step: "第二步 · AI证据提取",
+    title: "先看依据，再看方向",
+    subtitle: "以下结论来自你的原始回答；推测和缺口会被单独标记。",
+  },
+  market: {
+    step: "第三步 · 市场机会分析",
+    title: "三条路线，分别值得怎么验证？",
+    subtitle: "Demo不接外部市场数据库，因此无法确认的市场判断会显示“待验证”。",
+  },
+  startup: {
+    step: "第四步 · 启动条件确认",
+    title: "什么方向适合现在的你？",
+    subtitle: "确认4项现实条件，预计30—60秒。示例数据已经预填，你可以体验调整。",
+  },
+  fit: {
+    step: "第四步 · 个人启动适配",
+    title: "不是最好，而是现在更容易开始",
+    subtitle: "后台规则比较4项现实条件；页面不展示精确总分。",
+  },
+};
+
+const STATUS_CLASS = {
+  当前满足: "green",
+  可以补足: "yellow",
+  明显冲突: "red",
+  待验证: "gray",
+  优先验证: "green",
+  补足后验证: "yellow",
+  暂缓: "red",
+};
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function decorateRoute(route) {
+  const market = route.marketOpportunity;
+  const startupFit = route.startupFit || { dimensions: [] };
+  return {
+    ...route,
+    marketRows: [
+      {
+        label: "付费市场成熟度",
+        value: market.paidMarketMaturity.result,
+        basis: market.paidMarketMaturity.basis,
+      },
+      {
+        label: "竞品与差异化",
+        value: market.competitorAndDifferentiation.result,
+        basis: market.competitorAndDifferentiation.basis,
+      },
+      {
+        label: "需求证据强度",
+        value: market.demandEvidenceStrength.result,
+        basis: market.demandEvidenceStrength.basis,
+      },
+      {
+        label: "主要获客渠道",
+        value: market.acquisitionChannel.result,
+        basis: market.acquisitionChannel.basis,
+      },
+      {
+        label: "首笔变现预期",
+        value: `${market.firstRevenueExpectation.cycle} · ${market.firstRevenueExpectation.amountRange}`,
+        basis: market.firstRevenueExpectation.basis,
+      },
+    ],
+    fitDimensions: startupFit.dimensions.map((dimension) => ({
+      ...dimension,
+      statusClass: STATUS_CLASS[dimension.status] || "gray",
+    })),
+    fitResultClass: STATUS_CLASS[startupFit.result] || "gray",
+  };
+}
+
+Page({
+  data: {
+    mode: "evidence",
+    meta: MODE_META.evidence,
+    evidence: {},
+    routes: [],
+    conditions: {},
+    latestRevenueOptions: ["1个月内", "3个月内", "6个月内", "可以更久"],
+    amountOptions: ["100元以内", "100—1000元", "1000—5000元", "5000元以上"],
+    weeklyTimeOptions: ["少于3小时", "3—7小时", "7—14小时", "14小时以上"],
+    reachableOptions: ["0人", "1—5人", "6—20人", "20人以上"],
+    budgetOptions: ["0元", "500元以内", "500—3000元", "3000元以上"],
+    supplementOptions: ["愿意花钱", "更愿意投入时间", "可以找人合作", "暂时不补足"],
+  },
+
+  onLoad(options) {
+    const result = wx.getStorageSync(RESULT_KEY) || DEMO_DATA;
+    this.result = clone(result);
+    this.setData({
+      evidence: this.result.evidence,
+      routes: this.result.routes.map(decorateRoute),
+      conditions: clone(this.result.session.startupConditions),
+    });
+    this.setMode(options.mode || "evidence");
+  },
+
+  setMode(mode) {
+    const safeMode = MODE_META[mode] ? mode : "evidence";
+    this.setData({ mode: safeMode, meta: MODE_META[safeMode] });
+    wx.pageScrollTo({ scrollTop: 0, duration: 0 });
+  },
+
+  onEditAnswers() {
+    wx.navigateBack({ delta: 1 });
+  },
+
+  onShowMarket() {
+    this.setMode("market");
+  },
+
+  onShowStartup() {
+    this.setMode("startup");
+  },
+
+  onShowFit() {
+    wx.setStorageSync("opc_mvp_conditions", this.data.conditions);
+    this.setMode("fit");
+  },
+
+  onBackEvidence() {
+    this.setMode("evidence");
+  },
+
+  onBackMarket() {
+    this.setMode("market");
+  },
+
+  onBackStartup() {
+    this.setMode("startup");
+  },
+
+  onRevenueCycleChange(e) {
+    this.setData({
+      "conditions.incomeFloor.latestFirstRevenue": this.data.latestRevenueOptions[e.detail.value],
+    });
+  },
+
+  onRevenueAmountChange(e) {
+    this.setData({
+      "conditions.incomeFloor.minimumMeaningfulAmount": this.data.amountOptions[e.detail.value],
+    });
+  },
+
+  onWeeklyTimeChange(e) {
+    this.setData({ conditions: { ...this.data.conditions, weeklyAvailableTime: this.data.weeklyTimeOptions[e.detail.value] } });
+  },
+
+  onReachableChange(e) {
+    const routeId = e.currentTarget.dataset.route;
+    this.setData({
+      [`conditions.reachableUsersByRoute.${routeId}`]: this.data.reachableOptions[e.detail.value],
+    });
+  },
+
+  onBudgetChange(e) {
+    this.setData({
+      "conditions.validationResources.budget": this.data.budgetOptions[e.detail.value],
+    });
+  },
+
+  onSupplementChange(e) {
+    this.setData({
+      "conditions.validationResources.supplementMethod": this.data.supplementOptions[e.detail.value],
+    });
+  },
+
+  onSelectRoute(e) {
+    const routeId = e.currentTarget.dataset.route;
+    const session = wx.getStorageSync(SESSION_KEY) || {};
+    session.selectedRouteId = routeId;
+    session.currentStep = "plan";
+    wx.setStorageSync(SESSION_KEY, session);
+    wx.navigateTo({ url: `/pages/plan/index?routeId=${routeId}` });
+  },
+
+  onSkipSelection() {
+    wx.showToast({ title: "已保留结果，可以稍后再选", icon: "none" });
+  },
+});

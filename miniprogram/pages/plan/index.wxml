@@ -1,0 +1,58 @@
+<view class="screen plan-screen">
+  <view class="step-eyebrow">第五步 · 生成7天行动计划</view>
+  <view class="page-title">你的低后悔先行方向</view>
+
+  <view class="selected-route-card">
+    <view class="selected-label">已确认路线 {{route.routeId}}</view>
+    <view class="selected-name">{{route.routeName}}</view>
+    <view class="selected-copy">{{route.oneLiner}}</view>
+
+    <view class="reason-block">
+      <view class="reason-title">为什么值得先验证</view>
+      <view class="reason-item">心流与能力：{{route.matchEvidence[0].claim}}</view>
+      <view class="reason-item">市场机会：{{route.marketOpportunity.paidMarketMaturity.result}}</view>
+      <view class="reason-item">启动适配：{{route.startupFit.result}}</view>
+    </view>
+
+    <view class="risk-block">
+      <view><text>最大风险</text>{{route.maxRisk}}</view>
+      <view><text>当前缺口</text>{{route.startupFit.maxGap}}</view>
+    </view>
+  </view>
+
+  <view class="plan-heading">{{plan.planName}}</view>
+  <view class="plan-goal">本周核心假设：{{plan.planGoal}}</view>
+  <view class="plan-source {{plan.source === 'ai_generated' ? 'source-ai' : 'source-fixed'}}">{{planSourceLabel}}</view>
+
+  <view wx:for="{{plan.days}}" wx:key="day" class="day-card">
+    <view class="day-top">
+      <view class="day-number">DAY {{item.day}}</view>
+      <view class="day-time">{{item.estimatedTime}}</view>
+    </view>
+    <view class="day-goal">{{item.goal}}</view>
+    <view class="day-section">
+      <view class="day-label">最小行动</view>
+      <view class="day-content">{{item.minimumAction}}</view>
+    </view>
+    <view class="day-section evidence-section">
+      <view class="day-label">完成证据</view>
+      <view class="day-content">{{item.completionEvidence}}</view>
+    </view>
+    <view class="fallback">做不到时：{{item.fallback}}</view>
+    <view wx:if="{{item.whyThisMatters}}" class="why-matters">为什么重要：{{item.whyThisMatters}}</view>
+  </view>
+
+  <view class="other-heading">另外两条路线为什么暂不优先</view>
+  <view wx:for="{{otherRoutes}}" wx:key="routeId" class="other-route">
+    <view class="other-name">路线{{item.routeId}} · {{item.routeName}}</view>
+    <view class="other-reason">{{item.reason}}</view>
+  </view>
+
+  <view class="plan-note">{{plan.planNote}}</view>
+  <view class="button-stack">
+    <button class="main-button" bindtap="onStartDay1" disabled="{{day1Started}}">{{day1Started ? 'Day 1 已开始' : '开始 Day 1'}}</button>
+    <button class="secondary-button" bindtap="onBackToRoutes">重新选择路线</button>
+  </view>
+
+  <view class="disclaimer">本工具提供的建议仅供方向验证参考，不构成职业、投资或人生决策依据。</view>
+</view>

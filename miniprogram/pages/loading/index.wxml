@@ -1,0 +1,27 @@
+<view class="screen loading-screen">
+  <view class="loading-orbit">
+    <view class="orbit-ring"></view>
+    <view class="orbit-core">OPC</view>
+  </view>
+
+  <view class="loading-title">正在整理你的定位证据</view>
+  <view class="loading-copy">我们会先找依据，再生成路线。没有证据的判断会明确标记为“待验证”。</view>
+
+  <view class="stage-card">
+    <view wx:for="{{stages}}" wx:key="label" class="stage-row">
+      <view class="stage-icon stage-{{item.status}}">
+        <text wx:if="{{item.status === 'done'}}">✓</text>
+        <text wx:elif="{{item.status === 'error'}}">!</text>
+        <view wx:else class="stage-dot"></view>
+      </view>
+      <text class="stage-label stage-label-{{item.status}}">{{item.label}}</text>
+    </view>
+  </view>
+
+  <view class="demo-note">{{note}}</view>
+  <view wx:if="{{hasError}}" class="error-message">{{errorMessage}}</view>
+  <view wx:if="{{hasError}}" class="button-stack loading-actions">
+    <button class="main-button" bindtap="onRetry">重试AI分析</button>
+    <button class="secondary-button" bindtap="onUseDemoNow">使用演示数据继续</button>
+  </view>
+</view>

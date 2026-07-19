@@ -1,0 +1,22 @@
+<view class="screen loading-screen">
+  <view class="loading-orbit">
+    <view class="orbit-ring"></view>
+    <view class="orbit-core">OPC</view>
+  </view>
+
+  <view class="loading-title">正在整理你的定位证据</view>
+  <view class="loading-copy">我们会先找依据，再生成路线。没有证据的判断会明确标记为“待验证”。</view>
+
+  <view class="stage-card">
+    <view wx:for="{{stages}}" wx:key="label" class="stage-row">
+      <view class="stage-icon stage-{{item.status}}">
+        <text wx:if="{{item.status === 'done'}}">✓</text>
+        <view wx:else class="stage-dot"></view>
+      </view>
+      <text class="stage-label stage-label-{{item.status}}">{{item.label}}</text>
+    </view>
+  </view>
+
+  <view class="demo-note">{{note}}</view>
+  <button class="secondary-button demo-button" bindtap="onUseDemoNow">直接查看演示结果</button>
+</view>

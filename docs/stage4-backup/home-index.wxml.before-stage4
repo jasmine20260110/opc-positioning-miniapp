@@ -32,16 +32,11 @@
   </view>
 
   <view class="button-stack">
-    <button class="main-button" bindtap="onStart">{{primaryButtonText}}</button>
-    <button
-      class="secondary-button"
-      bindtap="onUseDemo"
-      loading="{{demoStarting}}"
-      disabled="{{demoStarting}}"
-    >{{demoStarting ? '正在准备示例数据' : '使用示例数据快速演示'}}</button>
+    <button class="main-button" bindtap="onStart">{{hasSavedSession ? '继续定位' : '开始定位'}}</button>
+    <button class="secondary-button" bindtap="onUseDemo">使用示例数据快速演示</button>
   </view>
 
   <view class="privacy-note">
-    当前为内部MVP。开始AI分析后，20题回答会通过微信云函数发送至阿里百炼处理，结果保存在本机。请勿输入身份证号、公司机密等敏感信息；AI建议仅用于方向验证参考。
+    当前为内部MVP。结果默认保存在本机；请勿输入身份证号、公司机密等敏感信息。AI建议仅用于方向验证参考。
   </view>
 </view>

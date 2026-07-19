@@ -1,0 +1,49 @@
+const { DEMO_DATA } = require("../../utils/demoData");
+
+const RESULT_KEY = "opc_mvp_result";
+
+Page({
+  data: {
+    stages: [
+      { label: "提取心流与优势证据", status: "active" },
+      { label: "生成3条候选路线", status: "pending" },
+      { label: "分析市场机会和启动要求", status: "pending" },
+    ],
+    note: "当前阶段使用固定演示数据，不会调用外部AI。",
+  },
+
+  onLoad() {
+    this.timers = [];
+    this.timers.push(setTimeout(() => this.markStage(0), 450));
+    this.timers.push(setTimeout(() => this.activateStage(1), 700));
+    this.timers.push(setTimeout(() => this.markStage(1), 1100));
+    this.timers.push(setTimeout(() => this.activateStage(2), 1300));
+    this.timers.push(setTimeout(() => this.finish(), 1800));
+  },
+
+  onUnload() {
+    (this.timers || []).forEach((timer) => clearTimeout(timer));
+  },
+
+  markStage(index) {
+    this.setData({ [`stages[${index}].status`]: "done" });
+  },
+
+  activateStage(index) {
+    this.setData({ [`stages[${index}].status`]: "active" });
+  },
+
+  finish() {
+    this.markStage(2);
+    wx.setStorageSync(RESULT_KEY, DEMO_DATA);
+    setTimeout(() => {
+      wx.redirectTo({ url: "/pages/report/index?mode=evidence" });
+    }, 250);
+  },
+
+  onUseDemoNow() {
+    (this.timers || []).forEach((timer) => clearTimeout(timer));
+    wx.setStorageSync(RESULT_KEY, DEMO_DATA);
+    wx.redirectTo({ url: "/pages/report/index?mode=evidence" });
+  },
+});

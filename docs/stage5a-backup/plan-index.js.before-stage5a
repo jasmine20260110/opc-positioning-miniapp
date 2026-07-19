@@ -1,0 +1,79 @@
+const { DEMO_DATA } = require("../../utils/demoData");
+
+const RESULT_KEY = "opc_mvp_result";
+const SESSION_KEY = "opc_mvp_session";
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function buildGenericPlan(route) {
+  const actions = [
+    ["锁定目标用户", `写出“${route.routeName}”最想服务的一类人和一个具体问题。`, "一段不超过100字的用户问题描述", "只写一个你最熟悉的具体人物"],
+    ["验证问题是否真实", "联系2位目标用户，询问他们最近一次遇到这个问题的场景。", "两段访谈或聊天记录", "先联系1位最容易沟通的人"],
+    ["设计最小方案", "把解决方案缩小成一次可以交付的最小体验。", "一张最小方案卡", "只写输入、过程、输出三个标题"],
+    ["执行首次验证", route.minValidationAction, "一份真实执行记录", "先发出一个明确邀请"],
+    ["根据反馈修改", "删除一个无用部分，补充一个用户最需要的部分。", "更新后的最小方案", "只记录一个必须修改的问题"],
+    ["测试付费信号", "提出一个低风险付费方案，询问对方是否愿意购买以及原因。", "明确的付费意向和理由", "只询问什么条件下愿意付费"],
+    ["做继续或停止决定", "汇总本周证据，决定继续、调整还是暂停这条路线。", "一页验证结论", "只写三条最重要的证据"],
+  ];
+
+  return {
+    selectedRouteId: route.routeId,
+    planName: `7天验证计划：${route.routeName}`,
+    planGoal: `验证“${route.routeName}”是否值得继续投入。`,
+    planNote: "本计划只验证需求和行动意愿，不建议辞职或进行大额投入。",
+    days: actions.map((item, index) => ({
+      day: index + 1,
+      goal: item[0],
+      minimumAction: item[1],
+      estimatedTime: index === 3 ? "60分钟" : "30—45分钟",
+      completionEvidence: item[2],
+      fallback: item[3],
+    })),
+  };
+}
+
+Page({
+  data: {
+    route: {},
+    plan: {},
+    otherRoutes: [],
+    started: false,
+  },
+
+  onLoad(options) {
+    const result = clone(wx.getStorageSync(RESULT_KEY) || DEMO_DATA);
+    const routeId = options.routeId || result.session.selectedRouteId || "A";
+    const route = result.routes.find((item) => item.routeId === routeId) || result.routes[0];
+    const plan = route.routeId === result.plan.selectedRouteId ? result.plan : buildGenericPlan(route);
+    const session = wx.getStorageSync(SESSION_KEY) || {};
+
+    this.setData({
+      route,
+      plan,
+      otherRoutes: result.routes
+        .filter((item) => item.routeId !== route.routeId)
+        .map((item) => ({
+          routeId: item.routeId,
+          routeName: item.routeName,
+          reason: `当前结论：${item.startupFit.result}；主要缺口是${item.startupFit.maxGap}。`,
+        })),
+      started: Boolean(session.behavior && session.behavior.day1Started),
+    });
+  },
+
+  onStartDay1() {
+    const session = wx.getStorageSync(SESSION_KEY) || {};
+    session.behavior = session.behavior || {};
+    session.behavior.day1Started = true;
+    session.behavior.day1StartedAt = new Date().toISOString();
+    wx.setStorageSync(SESSION_KEY, session);
+    this.setData({ started: true });
+    wx.showToast({ title: "Day 1已开始", icon: "success" });
+  },
+
+  onBackToRoutes() {
+    wx.navigateBack({ delta: 1 });
+  },
+});
