@@ -12,9 +12,21 @@
 
 ## 操作视频
 
-[▶ 在线播放完整操作视频（2分51秒，含中文解说）](https://jasmine20260110.github.io/opc-positioning-miniapp/demo/)
+两个版本均使用虚构演示数据，内容覆盖主要产品流程：
 
-若播放页暂时无法打开，可[直接下载解说版 MP4 视频](https://raw.githubusercontent.com/jasmine20260110/opc-positioning-miniapp/master/demo/opc-demo-commentary.mp4)。视频使用虚构演示数据，并包含中文解说。
+### 中文解说版
+
+- 时长：2 分 51 秒
+- 区别：包含中文讲解，方便快速理解操作流程；经过压缩，画质略低。
+- [▶ 在线播放解说版](https://jasmine20260110.github.io/opc-positioning-miniapp/demo/#commentary)
+- [下载解说版 MP4](https://raw.githubusercontent.com/jasmine20260110/opc-positioning-miniapp/master/demo/opc-demo-commentary.mp4)
+
+### 高清无声版
+
+- 时长：2 分 44 秒
+- 区别：没有声音，画面更清晰，适合查看页面和交互细节。
+- [▶ 在线播放高清无声版](https://jasmine20260110.github.io/opc-positioning-miniapp/demo/#silent-hq)
+- [下载高清无声版 MP4](https://raw.githubusercontent.com/jasmine20260110/opc-positioning-miniapp/master/demo/opc-demo-silent-hq.mp4)
 
 ## 演示截图
 

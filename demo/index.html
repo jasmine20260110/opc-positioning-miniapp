@@ -9,20 +9,42 @@
       body { margin: 0; background: #0f172a; color: #f8fafc; }
       main { width: min(92vw, 520px); margin: 0 auto; padding: 32px 0 48px; }
       h1 { margin: 0 0 8px; font-size: 24px; }
+      h2 { margin: 0 0 8px; font-size: 20px; }
       p { color: #cbd5e1; line-height: 1.6; }
-      video { display: block; width: 100%; max-height: 78vh; margin: 20px 0; background: #000; border-radius: 14px; }
+      .intro { margin-bottom: 24px; }
+      .version-card { margin-top: 20px; padding: 20px; border: 1px solid #334155; border-radius: 16px; background: #111c31; scroll-margin-top: 20px; }
+      .version-card p { margin: 8px 0; }
+      video { display: block; width: 100%; max-height: 78vh; margin: 16px 0; background: #000; border-radius: 14px; }
+      .back-link { margin-top: 28px; text-align: center; }
       a { color: #7dd3fc; }
     </style>
   </head>
   <body>
     <main>
       <h1>OPC定位神器操作演示</h1>
-      <p>完整流程约 2 分 51 秒，包含中文解说，画面使用虚构演示数据。</p>
-      <video controls playsinline preload="metadata">
-        <source src="opc-demo-commentary.mp4" type="video/mp4">
-        当前浏览器不支持视频播放，请使用下方下载链接。
-      </video>
-      <p><a href="opc-demo-commentary.mp4" download>下载解说版 MP4 视频</a> · <a href="../">返回项目介绍</a></p>
+      <p class="intro">提供两个版本：解说版方便理解流程，高清无声版方便查看页面细节。两个版本均使用虚构演示数据。</p>
+
+      <section id="commentary" class="version-card">
+        <h2>中文解说版</h2>
+        <p><strong>2 分 51 秒</strong> · 含中文讲解，适合快速理解流程；画质略有压缩。</p>
+        <video controls playsinline preload="metadata">
+          <source src="opc-demo-commentary.mp4" type="video/mp4">
+          当前浏览器不支持视频播放，请使用下方下载链接。
+        </video>
+        <p><a href="opc-demo-commentary.mp4" download>下载解说版 MP4</a></p>
+      </section>
+
+      <section id="silent-hq" class="version-card">
+        <h2>高清无声版</h2>
+        <p><strong>2 分 44 秒</strong> · 无声音、画面更清晰，适合查看页面和交互细节。</p>
+        <video controls playsinline preload="metadata">
+          <source src="opc-demo-silent-hq.mp4" type="video/mp4">
+          当前浏览器不支持视频播放，请使用下方下载链接。
+        </video>
+        <p><a href="opc-demo-silent-hq.mp4" download>下载高清无声版 MP4</a></p>
+      </section>
+
+      <p class="back-link"><a href="../">返回项目介绍</a></p>
     </main>
   </body>
 </html>
