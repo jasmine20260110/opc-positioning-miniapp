@@ -37,7 +37,7 @@ async function main() {
     let page = await miniProgram.reLaunch("/pages/index/index");
     const primaryButton = await page.$(".main-button");
     const completedLabel = await primaryButton.text();
-    assert.strictEqual(completedLabel, "开启定位");
+    assert.strictEqual(completedLabel, "开始探索");
     await primaryButton.tap();
     await sleep(800);
     page = await miniProgram.currentPage();
@@ -65,7 +65,7 @@ async function main() {
     page = await miniProgram.reLaunch("/pages/index/index");
     const questionButton = await page.$(".main-button");
     const draftLabel = await questionButton.text();
-    assert.strictEqual(draftLabel, "开启定位");
+    assert.strictEqual(draftLabel, "开始探索");
     await questionButton.tap();
     await sleep(800);
     page = await miniProgram.currentPage();

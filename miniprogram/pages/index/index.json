@@ -1,3 +1,4 @@
 {
-  "navigationBarTitleText": "OPC定位神器"
+  "navigationBarTitleText": "OPC定位神器",
+  "navigationStyle": "custom"
 }

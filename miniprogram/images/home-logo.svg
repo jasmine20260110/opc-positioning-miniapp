@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e92338"/>
+      <stop offset="1" stop-color="#cb1025"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="156" height="156" rx="34" fill="url(#red)"/>
+  <text x="80" y="63" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="39" font-weight="700" text-anchor="middle">OPC</text>
+  <path d="M80 69c-20.5 0-37 16.5-37 37 0 27.5 37 48 37 48s37-20.5 37-48c0-20.5-16.5-37-37-37zm0 58a21 21 0 1 1 0-42 21 21 0 0 1 0 42z" fill="#fff"/>
+  <circle cx="80" cy="106" r="9.5" fill="url(#red)"/>
+</svg>

@@ -1,47 +1,71 @@
-<view class="screen landing-screen">
-  <view class="brand-pill">INTERNAL MVP DEMO</view>
-  <view class="hero-title">OPC定位神器</view>
-  <view class="hero-formula">心流证据 × 市场机会 × 个人现实约束</view>
-  <view class="hero-copy">
-    用约15分钟完成一次方向梳理。从你的真实经历出发，得到3条候选路线、一条低后悔先行方向和7天行动计划。
-  </view>
+<view class="home-screen">
+  <view class="home-content">
+    <image class="home-logo" src="/images/home-logo.svg" mode="aspectFit" />
 
-  <view class="result-card">
-    <view class="result-card-title">这次定位会给你什么？</view>
-    <view class="result-item">
-      <view class="result-index">01</view>
-      <view>
-        <view class="result-name">3条有依据的候选路线</view>
-        <view class="result-note">每条判断都尽量对应你的原始回答</view>
+    <view class="home-title">OPC定位神器</view>
+    <view class="home-subtitle">探索你的优势与定位</view>
+
+    <view class="gold-divider">
+      <view class="gold-divider-line"></view>
+      <view class="gold-divider-dot"></view>
+      <view class="gold-divider-line"></view>
+    </view>
+    <view class="home-slogan">开启OPC，笃定前行</view>
+
+    <view class="benefit-card">
+      <view class="benefit-row">
+        <view class="benefit-icon-wrap">
+          <image class="benefit-icon" src="/images/home-clock.svg" mode="aspectFit" />
+        </view>
+        <view class="benefit-copy">
+          <view class="benefit-main"><text class="benefit-accent">~15分钟</text></view>
+          <view class="benefit-note">梳理热爱 × 擅长 × 市场</view>
+        </view>
+      </view>
+
+      <view class="benefit-separator"></view>
+
+      <view class="benefit-row">
+        <view class="benefit-icon-wrap">
+          <image class="benefit-icon" src="/images/home-route.svg" mode="aspectFit" />
+        </view>
+        <view class="benefit-copy">
+          <view class="benefit-main">获得<text class="benefit-accent benefit-number">3</text>条候选路线</view>
+        </view>
+      </view>
+
+      <view class="benefit-separator"></view>
+
+      <view class="benefit-row">
+        <view class="benefit-icon-wrap">
+          <image class="benefit-icon" src="/images/home-calendar.svg" mode="aspectFit" />
+        </view>
+        <view class="benefit-copy">
+          <view class="benefit-main">开启<text class="benefit-accent benefit-number">7</text>天验证行动</view>
+        </view>
       </view>
     </view>
-    <view class="result-item">
-      <view class="result-index">02</view>
-      <view>
-        <view class="result-name">1条低后悔先行方向</view>
-        <view class="result-note">结合市场机会和你当前的现实条件</view>
+
+    <button class="main-button home-start-button" bindtap="onStart">开始探索</button>
+    <button class="home-report-link" bindtap="onViewReport">
+      <text>已有报告？查看我的报告</text>
+      <text class="report-arrow">→</text>
+    </button>
+
+    <view class="proof-bar">
+      <view class="proof-item">
+        <image class="proof-icon proof-users-icon" src="/images/home-users.svg" mode="aspectFit" />
+        <text class="proof-label">已有</text>
+        <text class="proof-number">128</text>
+        <text class="proof-label">人找到方向</text>
+      </view>
+      <view class="proof-separator"></view>
+      <view class="proof-item proof-item-time">
+        <image class="proof-icon" src="/images/home-duration.svg" mode="aspectFit" />
+        <text class="proof-label">平均用时</text>
+        <text class="proof-number">14</text>
+        <text class="proof-label">分钟</text>
       </view>
     </view>
-    <view class="result-item">
-      <view class="result-index">03</view>
-      <view>
-        <view class="result-name">7天最小验证计划</view>
-        <view class="result-note">每天只推进一项可完成、可观察的行动</view>
-      </view>
-    </view>
-  </view>
-
-  <view class="button-stack">
-    <button class="main-button" bindtap="onStart">{{primaryButtonText}}</button>
-    <button
-      class="secondary-button"
-      bindtap="onUseDemo"
-      loading="{{demoStarting}}"
-      disabled="{{demoStarting}}"
-    >{{demoStarting ? '正在准备示例数据' : '使用示例数据快速演示'}}</button>
-  </view>
-
-  <view class="privacy-note">
-    当前为内部MVP。开始AI分析后，20题回答会通过微信云函数发送至阿里百炼处理，结果保存在本机。请勿输入身份证号、公司机密等敏感信息；AI建议仅用于方向验证参考。
   </view>
 </view>

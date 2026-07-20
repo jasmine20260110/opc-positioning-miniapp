@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 48">
+  <g fill="#d7a44c">
+    <circle cx="36" cy="12" r="9"/>
+    <circle cx="15" cy="18" r="7" opacity=".9"/>
+    <circle cx="57" cy="18" r="7" opacity=".9"/>
+    <path d="M19 43c0-11 7-18 17-18s17 7 17 18z"/>
+    <path d="M1 43c0-9 5-15 14-15 4 0 7 1 10 4-4 4-6 8-6 11z" opacity=".9"/>
+    <path d="M53 43c0-4-2-8-6-11 3-3 6-4 10-4 9 0 14 6 14 15z" opacity=".9"/>
+  </g>
+</svg>

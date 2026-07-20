@@ -7,6 +7,7 @@ const CONDITIONS_KEY = "opc_mvp_conditions";
 const PLAN_KEY = "opc_mvp_plan";
 const QUESTION_URL = "/pages/question/index";
 const INTRO_URL = "/pages/positioning-intro/index";
+const REPORT_URL = "/pages/report/index?mode=evidence";
 const PRIMARY_BUTTON_TEXT = "开启定位";
 
 function getResumeDestination(session, result, plan) {
@@ -98,6 +99,18 @@ Page({
       wx.setStorageSync(SESSION_KEY, session);
     }
     this.openPage(INTRO_URL);
+  },
+
+  onViewReport() {
+    const result = wx.getStorageSync(RESULT_KEY);
+    if (!result || !Array.isArray(result.routes) || result.routes.length === 0) {
+      wx.showToast({
+        title: "完成定位后即可查看报告",
+        icon: "none",
+      });
+      return;
+    }
+    this.openPage(REPORT_URL);
   },
 
   onUseDemo() {
