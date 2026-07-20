@@ -12,9 +12,9 @@
 
 ## 操作视频
 
-[▶ 在线播放完整操作视频（4分39秒，无声）](https://jasmine20260110.github.io/opc-positioning-miniapp/demo/)
+[▶ 在线播放完整操作视频（2分51秒，含中文解说）](https://jasmine20260110.github.io/opc-positioning-miniapp/demo/)
 
-若播放页暂时无法打开，可[直接下载 MP4 视频](https://raw.githubusercontent.com/jasmine20260110/opc-positioning-miniapp/master/demo/opc-demo.mp4)。视频使用虚构演示数据，已移除音轨、录屏通知和原始设备描述元数据。
+若播放页暂时无法打开，可[直接下载解说版 MP4 视频](https://raw.githubusercontent.com/jasmine20260110/opc-positioning-miniapp/master/demo/opc-demo-commentary.mp4)。视频使用虚构演示数据，并包含中文解说。
 
 ## 演示截图
 
