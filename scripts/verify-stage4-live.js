@@ -67,8 +67,9 @@ async function main() {
       if (page.path === "pages/loading/index") {
         const hasError = await page.data("hasError");
         if (hasError) {
-          const errorMessage = await page.data("errorMessage");
-          throw new Error(`Loading页报告失败：${errorMessage}`);
+          const errorStage = await page.data("errorStage");
+          const errorReason = await page.data("errorReason");
+          throw new Error(`Loading页报告失败：${errorStage}；${errorReason}`);
         }
       }
       await sleep(2000);

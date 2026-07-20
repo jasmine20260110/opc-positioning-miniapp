@@ -94,7 +94,7 @@ async function main() {
   global.wx.cloud.callFunction = async () => ({
     result: {
       ok: false,
-      error: { code: "AI_TIMEOUT", message: "AI分析超时，请重试或使用演示数据。", retryable: true },
+      error: { code: "AI_TIMEOUT", message: "AI分析超时，请重试或返回首页。", retryable: true },
     },
   });
   await assert.rejects(

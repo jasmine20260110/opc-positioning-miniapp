@@ -161,6 +161,25 @@
   text-align: left;
 }
 
+.error-title {
+  font-weight: 700;
+}
+
+.error-detail,
+.error-action,
+.retry-count {
+  margin-top: 8rpx;
+}
+
+.error-action {
+  color: #7f514d;
+}
+
+.retry-count {
+  color: #9a5b55;
+  font-size: 22rpx;
+}
+
 .loading-actions {
   width: 100%;
   margin-top: 24rpx;

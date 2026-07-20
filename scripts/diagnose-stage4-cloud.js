@@ -10,8 +10,13 @@ if (!automatorPath || !wsEndpoint) {
 
 const automator = require(automatorPath);
 
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
 async function main() {
   const miniProgram = await automator.connect({ wsEndpoint });
+  const storageKey = `opc_evidence_diagnosis_${Date.now()}`;
   try {
     const answerItems = QUESTIONS.map((question) => ({
       questionId: question.questionId,
@@ -19,16 +24,35 @@ async function main() {
       intent: question.intent,
       answer: SAMPLE_ANSWERS[question.questionId],
     }));
-    const response = await miniProgram.evaluate(async (items) => {
-      const cloudResponse = await wx.cloud.callFunction({
+    await miniProgram.callWxMethod("removeStorageSync", storageKey);
+    await miniProgram.evaluate((request) => {
+      wx.cloud.callFunction({
         name: "opcApi",
         data: {
           action: "extractEvidence",
-          payload: { answerItems: items },
+          payload: { answerItems: request.answerItems },
         },
+      }).then((cloudResponse) => {
+        wx.setStorageSync(request.storageKey, cloudResponse.result);
+      }).catch((error) => {
+        wx.setStorageSync(request.storageKey, {
+          ok: false,
+          error: {
+            code: "CLOUD_CALL_REJECTED",
+            message: String(error && error.errMsg ? error.errMsg : error),
+          },
+        });
       });
-      return cloudResponse.result;
-    }, answerItems);
+      return true;
+    }, { answerItems, storageKey });
+
+    const deadline = Date.now() + 70000;
+    let response;
+    while (Date.now() < deadline) {
+      response = await miniProgram.callWxMethod("getStorageSync", storageKey);
+      if (response && typeof response.ok === "boolean") break;
+      await sleep(1500);
+    }
 
     if (!response || !response.ok) {
       const safeError = response && response.error ? response.error : {};
@@ -46,6 +70,7 @@ async function main() {
       success: true,
       model: response.data.aiMeta.model,
       attempts: response.data.aiMeta.attempts,
+      fallback: response.data.aiMeta.fallback || null,
       flowEvidenceCount: response.data.evidence.flowEvidence.length,
       strengthEvidenceCount: response.data.evidence.strengthEvidence.length,
     }, null, 2));
@@ -57,6 +82,7 @@ async function main() {
     }, null, 2));
     process.exitCode = 2;
   } finally {
+    await miniProgram.callWxMethod("removeStorageSync", storageKey).catch(() => {});
     miniProgram.disconnect();
   }
 }

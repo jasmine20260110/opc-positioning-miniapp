@@ -241,15 +241,17 @@ function summarizeFit(route, dimensions) {
   let result;
   if (scores.includes(0)) result = "暂缓";
   else if (scores.includes(null)) result = "待验证";
-  else if (scores.includes(1)) result = "补足后验证";
-  else result = "优先验证";
+  else {
+    const totalScore = scores.reduce((sum, score) => sum + score, 0);
+    result = totalScore >= 7 ? "优先验证" : "补足后验证";
+  }
 
   const gap = dimensions.find((item) => item.internalScore === 0)
     || dimensions.find((item) => item.internalScore === 1)
     || dimensions.find((item) => item.internalScore === null);
   const routeName = route.routeName || `路线${route.routeId || ""}`;
   const strongest = dimensions.find((item) => item.internalScore === 2);
-  const conclusionParts = [`“${routeName}”当前结论为${result}`];
+  const conclusionParts = [`基于Demo保守启动门槛假设，“${routeName}”当前初步结论为${result}`];
   if (gap) conclusionParts.push(`应先处理${gap.name}`);
   else conclusionParts.push("当前启动条件基本满足");
   if (strongest && gap) conclusionParts.push(`可先利用${strongest.name}这一已有条件`);

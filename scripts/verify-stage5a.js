@@ -118,7 +118,17 @@ async function main() {
     assert(plan.selectedRouteId === "B", "计划路线和选择路线不一致");
     assert(plan.days.length === 7, "计划不是Day 1—Day 7");
     assert(plan.days.every((day) => day.minimumAction && day.estimatedTime && day.completionEvidence && day.fallback), "每日计划字段不完整");
-    assert(plan.days.some((day) => day.goal.includes("付费")), "计划缺少市场或付费验证");
+    const planValidationText = plan.days
+      .map((day) => `${day.goal}${day.minimumAction}${day.completionEvidence}`)
+      .join("");
+    assert(/访谈|联系|真实用户|目标用户|用户反馈|需求验证|需求场景|体验邀请|试用/.test(planValidationText), "计划缺少真实用户或市场验证");
+    assert(/付费|报价|购买|预售|成交|支付|价格/.test(planValidationText), "计划缺少付费信号验证");
+    const totalMaximumMinutes = plan.days.reduce((sum, day) => {
+      const minutes = String(day.estimatedTime).match(/\d+/g).map(Number);
+      assert(minutes[minutes.length - 1] <= 60, "单日预计用时超过60分钟");
+      return sum + minutes[minutes.length - 1];
+    }, 0);
+    assert(totalMaximumMinutes <= 14 * 60, "7天预计用时超过用户每周可投入时间上限");
     assert((await page.$$(".day-card")).length === 7, "页面没有显示7张行动卡");
 
     console.log("STAGE5_CHECK day1:start");

@@ -49,8 +49,10 @@ function normalizeEvidenceItems(items, answerMap, fallbackAnswerId) {
     .filter((item) => item && isText(item.sourceAnswerId) && answerMap[item.sourceAnswerId])
     .map((item) => {
       const answer = answerMap[item.sourceAnswerId];
+      const normalizedQuote = normalizeText(item.sourceQuote);
       const quoteIsGrounded = isText(item.sourceQuote)
-        && normalizeText(answer).includes(normalizeText(item.sourceQuote));
+        && normalizedQuote.length > 0
+        && normalizeText(answer).includes(normalizedQuote);
       return {
         ...item,
         claim: isText(item.claim) ? item.claim : answer,
@@ -138,7 +140,7 @@ function validateEvidenceItem(item, answerMap, label) {
   assert(isText(item.sourceQuote), `${label}.sourceQuote为空`);
   const answer = normalizeText(answerMap[item.sourceAnswerId]);
   const quote = normalizeText(item.sourceQuote);
-  assert(quote.length >= 2 && answer.includes(quote), `${label}.sourceQuote不是用户原文`);
+  assert(quote.length > 0 && answer.includes(quote), `${label}.sourceQuote不是用户原文`);
   assert(EVIDENCE_TYPES.includes(item.evidenceType), `${label}.evidenceType无效`);
 }
 
@@ -277,23 +279,65 @@ function validatePlanRequest(route, startupConditions) {
   return { route, startupConditions };
 }
 
-function validatePlan(data) {
+function parseEstimatedMinutes(value, label) {
+  assert(isText(value) && /分钟/.test(value), `${label}必须使用分钟`);
+  const matches = String(value).match(/\d+(?:\.\d+)?/g);
+  assert(matches && matches.length > 0, `${label}必须包含预计分钟数`);
+  const numbers = matches.map(Number);
+  assert(numbers.every((number) => Number.isFinite(number) && number > 0), `${label}包含无效时间`);
+  if (numbers.length > 1) {
+    assert(numbers[0] <= numbers[numbers.length - 1], `${label}时间区间顺序错误`);
+  }
+  const maximum = numbers[numbers.length - 1];
+  assert(maximum <= 60, `${label}单日预计用时不能超过60分钟`);
+  return maximum;
+}
+
+function weeklyAvailableMinutes(value) {
+  if (!isText(value)) return null;
+  if (value === "少于3小时") return 180;
+  if (String(value).includes("以上")) return Infinity;
+  const matches = String(value).match(/\d+(?:\.\d+)?/g);
+  if (!matches || matches.length === 0) return null;
+  return Number(matches[matches.length - 1]) * 60;
+}
+
+function validatePlan(data, startupConditions = {}) {
   assert(data && typeof data === "object", "计划输出不是对象");
   ["planName", "planGoal", "planNote"].forEach((key) => {
     assert(isText(data[key]), `计划输出${key}为空`);
   });
+  assert(/基于当前信息|待验证/.test(data.planNote), "planNote必须说明计划基于当前信息或关键假设待验证");
   assert(Array.isArray(data.days) && data.days.length === 7, "计划必须正好包含Day 1—Day 7");
+  let totalMaximumMinutes = 0;
   data.days.forEach((day, index) => {
     const expectedDay = index + 1;
     assert(day && day.day === expectedDay, `计划第${expectedDay}项的day必须是${expectedDay}`);
     ["goal", "minimumAction", "estimatedTime", "completionEvidence", "fallback"].forEach((key) => {
       assert(isText(day[key]), `Day ${expectedDay}.${key}为空`);
     });
+    totalMaximumMinutes += parseEstimatedMinutes(day.estimatedTime, `Day ${expectedDay}.estimatedTime`);
   });
+
+  const weeklyLimit = weeklyAvailableMinutes(startupConditions.weeklyAvailableTime);
+  if (isText(startupConditions.weeklyAvailableTime)) {
+    assert(weeklyLimit !== null, "计划输入weeklyAvailableTime无法解析");
+  }
+  if (weeklyLimit !== null && weeklyLimit !== Infinity) {
+    assert(
+      totalMaximumMinutes <= weeklyLimit,
+      `计划7天预计用时上限${totalMaximumMinutes}分钟超过用户每周可投入上限${weeklyLimit}分钟`,
+    );
+  }
+
   const validationText = data.days
     .map((day) => `${day.goal}${day.minimumAction}${day.completionEvidence}`)
     .join("");
-  assert(/付费|报价|购买|市场|访谈|目标用户|需求/.test(validationText), "计划缺少市场或付费验证");
+  assert(
+    /访谈|联系|真实用户|目标用户|用户反馈|需求验证|需求场景|体验邀请|试用/.test(validationText),
+    "计划缺少真实用户或市场验证",
+  );
+  assert(/付费|报价|购买|预售|成交|支付|价格/.test(validationText), "计划缺少付费信号验证");
   return data;
 }
 

@@ -34,17 +34,17 @@ function publicError(error) {
     ? error.code
     : "AI_ANALYSIS_FAILED";
   const messages = {
-    AI_NOT_CONFIGURED: "AI服务尚未配置，请使用演示数据或联系开发者。",
-    AI_TIMEOUT: "AI分析超时，请重试或使用演示数据。",
-    AI_NETWORK_ERROR: "AI服务暂时无法连接，请重试或使用演示数据。",
-    AI_INVALID_JSON: "AI返回格式不正确，请重试或使用演示数据。",
-    AI_SCHEMA_INVALID: "AI结果字段不完整，请重试或使用演示数据。",
-    AI_EMPTY_CONTENT: "AI没有返回有效结果，请重试或使用演示数据。",
-    AI_RESPONSE_TOO_LARGE: "AI返回内容过长，请重试或使用演示数据。",
+    AI_NOT_CONFIGURED: "AI服务尚未配置，请返回首页或联系开发者。",
+    AI_TIMEOUT: "AI分析超时，请重试或返回首页。",
+    AI_NETWORK_ERROR: "AI服务暂时无法连接，请重试或返回首页。",
+    AI_INVALID_JSON: "AI返回格式不正确，请重试或返回首页。",
+    AI_SCHEMA_INVALID: "AI结果字段不完整，请重试或返回首页。",
+    AI_EMPTY_CONTENT: "AI没有返回有效结果，请重试或返回首页。",
+    AI_RESPONSE_TOO_LARGE: "AI返回内容过长，请重试或返回首页。",
   };
   return {
     code,
-    message: messages[code] || "AI分析失败，请重试或使用演示数据。",
+    message: messages[code] || "AI分析失败，请重试或返回首页。",
     retryable: error.retryable !== false,
     details: code === "AI_SCHEMA_INVALID"
       ? String(error.message || "结构校验失败").slice(0, 160)

@@ -1,6 +1,6 @@
 <view class="screen plan-screen">
   <view class="step-eyebrow">第五步 · 生成7天行动计划</view>
-  <view class="page-title">你的低后悔先行方向</view>
+  <view class="page-title">你的高可行性方向</view>
 
   <view class="analysis-path">
     <text class="analysis-path-stage">心流证据</text>

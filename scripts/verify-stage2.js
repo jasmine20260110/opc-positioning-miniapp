@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { DEMO_DATA } = require("../miniprogram/utils/demoData");
 
 const automatorPath = process.env.MINIPROGRAM_AUTOMATOR_PATH;
 const cliPath = process.env.WECHAT_DEVTOOLS_CLI;
@@ -75,10 +76,10 @@ async function main() {
     assert(page.path === "pages/loading/index", "20题提交后未进入Loading页");
     assert((await page.$$(".stage-row")).length === 3, "Loading页必须展示3个分析阶段");
     screenshots.push(await capture(miniProgram, "03-loading"));
-    await page.callMethod("onUseDemoNow");
+    await miniProgram.callWxMethod("setStorageSync", "opc_mvp_result", DEMO_DATA);
+    await miniProgram.callWxMethod("setStorageSync", "opc_mvp_session", DEMO_DATA.session);
+    page = await miniProgram.reLaunch("/pages/report/index?mode=evidence");
     await new Promise((resolve) => setTimeout(resolve, 600));
-
-    page = await miniProgram.currentPage();
     assert(page.path === "pages/report/index", "Loading后未进入报告页");
     assert((await page.data("mode")) === "evidence", "报告页没有从evidence模式开始");
     assert((await page.$$(".route-preview")).length === 3, "证据页必须展示3条路线预览");

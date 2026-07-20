@@ -19,9 +19,14 @@
   </view>
 
   <view class="demo-note">{{note}}</view>
-  <view wx:if="{{hasError}}" class="error-message">{{errorMessage}}</view>
+  <view wx:if="{{hasError}}" class="error-message">
+    <view class="error-title">失败环节：{{errorStage}}</view>
+    <view class="error-detail">具体原因：{{errorReason}}</view>
+    <view class="error-action">{{errorAction}}</view>
+    <view wx:if="{{manualRetryCount > 0 && !retryLimitReached}}" class="retry-count">已手动重试 {{manualRetryCount}}/3 次</view>
+  </view>
   <view wx:if="{{hasError}}" class="button-stack loading-actions">
-    <button class="main-button" bindtap="onRetry">重试AI分析</button>
-    <button class="secondary-button" bindtap="onUseDemoNow">使用演示数据继续</button>
+    <button wx:if="{{!retryLimitReached}}" class="main-button" bindtap="onRetry">重试AI分析</button>
+    <button class="{{retryLimitReached ? 'main-button' : 'secondary-button'}}" bindtap="onReturnHome">返回首页</button>
   </view>
 </view>

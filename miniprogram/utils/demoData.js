@@ -353,7 +353,7 @@ const DEMO_DATA = Object.freeze({
     selectedRouteId: "A",
     planName: "7天验证计划：职场人的AI行动教练",
     planGoal: "验证目标用户是否需要一套AI辅助的7天方向行动服务。",
-    planNote: "本计划只验证需求和行动意愿，不建议辞职或进行大额投入。",
+    planNote: "本计划基于当前信息，只验证仍待验证的需求和行动意愿，不建议辞职或进行大额投入。",
     days: [
       {
         day: 1,

@@ -22,20 +22,69 @@ function mergeMarketIntoRoutes(routes, marketRoutes) {
   }));
 }
 
+function buildEvidenceFallback(answerItems, validationError) {
+  const answerMap = answerItems.reduce((map, item) => {
+    map[item.questionId] = item.answer;
+    return map;
+  }, {});
+  const directEvidence = (questionIds) => questionIds.map((questionId) => ({
+    claim: answerMap[questionId],
+    sourceAnswerId: questionId,
+    sourceQuote: answerMap[questionId],
+    evidenceType: "用户事实",
+  }));
+  const fallback = normalizeEvidence({
+    flowEvidence: directEvidence(["Q2", "Q3", "Q4"]),
+    strengthEvidence: directEvidence(["Q8", "Q9", "Q10"]),
+    marketInitialSignals: {
+      targetAudience: answerMap.Q15,
+      problem: answerMap.Q16,
+      paymentJudgment: answerMap.Q17,
+      evidenceType: "用户判断",
+    },
+    background: {},
+    evidenceSufficiency: {
+      flow: "低",
+      strength: "低",
+      market: "低",
+      reason: "AI证据结构未通过校验，本次先直接引用原始回答，结论仍需核对和验证。",
+    },
+    informationGaps: ["AI证据提取结果结构异常，已改用原始回答生成可追溯证据。"],
+  }, answerItems);
+  return {
+    evidence: validateEvidence(fallback, answerItems),
+    aiMeta: {
+      label: "extractEvidence",
+      model: getConfig().fastModel,
+      attempts: 3,
+      fallback: "direct_answer_evidence",
+      validationError: String(validationError && validationError.message || "结构校验失败").slice(0, 160),
+    },
+  };
+}
+
 async function extractEvidence(input, caller = callStructured) {
   const answerItems = validateAnswerItems(input.answerItems);
   const config = getConfig();
-  const response = await caller({
-    label: "extractEvidence",
-    model: config.fastModel,
-    systemPrompt: EVIDENCE_PROMPT,
-    userPayload: { answers: answerItems },
-    validate: (data) => validateEvidence(normalizeEvidence(data, answerItems), answerItems),
-  });
-  return {
-    evidence: response.data,
-    aiMeta: response.meta,
-  };
+  try {
+    const response = await caller({
+      label: "extractEvidence",
+      model: config.fastModel,
+      systemPrompt: EVIDENCE_PROMPT,
+      userPayload: { answers: answerItems },
+      validate: (data) => validateEvidence(normalizeEvidence(data, answerItems), answerItems),
+    });
+    return {
+      evidence: response.data,
+      aiMeta: response.meta,
+    };
+  } catch (error) {
+    if (!error || error.code !== "AI_SCHEMA_INVALID") throw error;
+    console.warn("[opcApi] evidence schema fallback", {
+      details: String(error.message || "结构校验失败").slice(0, 160),
+    });
+    return buildEvidenceFallback(answerItems, error);
+  }
 }
 
 async function generateRoutes(input, caller = callStructured) {
@@ -95,7 +144,7 @@ async function generatePlan(input, caller = callStructured) {
       selectedRoute: route,
       startupConditions,
     },
-    validate: validatePlan,
+    validate: (data) => validatePlan(data, startupConditions),
   });
   return {
     plan: {
@@ -130,6 +179,7 @@ async function runAnalysis(input, caller = callStructured) {
 
 module.exports = {
   analyzeMarket,
+  buildEvidenceFallback,
   extractEvidence,
   generatePlan,
   generateRoutes,

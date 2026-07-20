@@ -3,6 +3,8 @@ const { URL } = require("url");
 const { snakeToCamel } = require("./caseConverter");
 
 const DEFAULT_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1";
+const MAX_ATTEMPTS = 3;
+const AUTOMATIC_RETRY_COUNT = MAX_ATTEMPTS - 1;
 
 class BailianError extends Error {
   constructor(code, message, options = {}) {
@@ -37,8 +39,8 @@ function getConfig() {
     endpoint: resolveEndpoint(process.env.DASHSCOPE_BASE_URL || DEFAULT_BASE_URL),
     fastModel: process.env.DASHSCOPE_MODEL_FAST || defaultModel,
     qualityModel: process.env.DASHSCOPE_MODEL_QUALITY || defaultModel,
-    // 小程序同步调用的云函数按60秒配置；两次尝试需共同留在该预算内。
-    timeoutMs: Math.min(Math.max(Number(process.env.DASHSCOPE_TIMEOUT_MS) || 25000, 5000), 25000),
+    // 小程序同步调用的云函数按60秒配置；首次请求加两次重试需共同留在该预算内。
+    timeoutMs: Math.min(Math.max(Number(process.env.DASHSCOPE_TIMEOUT_MS) || 18000, 5000), 18000),
     maxCompletionTokens: Math.min(
       Math.max(Number(process.env.DASHSCOPE_MAX_COMPLETION_TOKENS) || 6000, 1000),
       12000,
@@ -144,7 +146,7 @@ async function callStructured({ label, model, systemPrompt, userPayload, validat
   const startedAt = Date.now();
   let lastError;
 
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
     try {
       const correction = attempt > 0
         && lastError
@@ -179,7 +181,7 @@ async function callStructured({ label, model, systemPrompt, userPayload, validat
       };
     } catch (error) {
       lastError = error;
-      if (attempt === 1 || !error.retryable) break;
+      if (attempt === MAX_ATTEMPTS - 1 || !error.retryable) break;
       await sleep(500);
     }
   }
@@ -198,7 +200,9 @@ function getPublicConfig() {
 }
 
 module.exports = {
+  AUTOMATIC_RETRY_COUNT,
   BailianError,
+  MAX_ATTEMPTS,
   callStructured,
   getConfig,
   getPublicConfig,
