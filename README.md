@@ -36,7 +36,7 @@
 
 ### 三条候选路线过渡页
 
-![Uploading image.png…]()
+<img width="602" height="1084" alt="image" src="https://github.com/user-attachments/assets/a4fdd36d-6508-4a9e-bf43-76811a8f1938" />
 
 
 ### 证据与候选路线示例
