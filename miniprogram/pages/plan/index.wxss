@@ -178,37 +178,8 @@
   line-height: 1.55;
 }
 
-.other-heading {
-  margin-top: 48rpx;
-  font-size: 30rpx;
-  font-weight: 700;
-}
-
-.other-route {
-  margin-top: 18rpx;
-  padding: 24rpx;
-  border-radius: 18rpx;
-  background: #ece7e2;
-}
-
-.other-name {
-  color: #49433f;
-  font-size: 24rpx;
-  font-weight: 650;
-}
-
-.other-reason {
-  margin-top: 8rpx;
-  color: #7b736d;
-  font-size: 21rpx;
-  line-height: 1.55;
-}
-
-.plan-note {
-  margin-top: 28rpx;
-  color: #837a73;
-  font-size: 22rpx;
-  line-height: 1.65;
+.plan-screen .button-stack {
+  margin-top: 20rpx;
 }
 
 .feedback-button {

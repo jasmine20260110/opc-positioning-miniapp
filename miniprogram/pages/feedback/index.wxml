@@ -6,7 +6,7 @@
   <view class="question-card">
     <view class="question-header">
       <view class="question-number">1</view>
-      <view class="question-title">这三个方向中，有没有哪个最打动你？</view>
+      <view class="question-title">这三个方向中，哪个最打动你？</view>
     </view>
     <textarea
       class="feedback-textarea feedback-textarea-compact"

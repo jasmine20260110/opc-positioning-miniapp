@@ -98,6 +98,7 @@ const DEMO_DATA = Object.freeze({
         evidenceType: "用户事实",
       },
     ],
+    flowSummary: "你喜欢研究AI并把复杂操作转化为可执行步骤，制作AI工作流教程时也容易进入长时间投入状态。",
     strengthEvidence: [
       {
         claim: "能够发现流程混乱点并重新整理",
@@ -112,6 +113,7 @@ const DEMO_DATA = Object.freeze({
         evidenceType: "用户事实",
       },
     ],
+    strengthSummary: "你擅长发现流程中的混乱点并重新梳理，已有项目规划、内容整理和流程优化的实践经验。",
     marketInitialSignals: {
       targetAudience: "正在转型、探索副业或一人公司的职场人",
       problem: "信息和方向过多，难以选择并开始行动",

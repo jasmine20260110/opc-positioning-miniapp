@@ -12,7 +12,6 @@ Page({
   data: {
     route: {},
     plan: {},
-    otherRoutes: [],
     day1Started: false,
     planSourceLabel: "",
   },
@@ -48,13 +47,6 @@ Page({
       planSourceLabel: plan.source === "ai_generated"
         ? "本计划由DeepSeek V4 Flash根据所选路线和启动条件生成。"
         : "AI计划暂不可用，当前展示可继续执行的本地固定计划。",
-      otherRoutes: result.routes
-        .filter((item) => item.routeId !== route.routeId)
-        .map((item) => ({
-          routeId: item.routeId,
-          routeName: item.routeName,
-          reason: `当前结论：${item.startupFit.result}；主要缺口是${item.startupFit.maxGap}。`,
-        })),
     });
   },
 

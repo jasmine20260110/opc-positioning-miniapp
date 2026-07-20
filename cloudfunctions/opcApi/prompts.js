@@ -3,13 +3,15 @@ const EVIDENCE_PROMPT = `
 请以JSON格式输出，结构必须是：
 {
   "flow_evidence":[{"claim":"","source_answer_id":"Q1","source_quote":"用户原文摘录","evidence_type":"用户事实"}],
+  "flow_summary":"",
   "strength_evidence":[{"claim":"","source_answer_id":"Q8","source_quote":"用户原文摘录","evidence_type":"用户事实"}],
+  "strength_summary":"",
   "market_initial_signals":{"target_audience":"","problem":"","payment_judgment":"","evidence_type":"用户判断"},
   "background":{"age_stage":"","career_status":"","daily_available_time":"","weekly_available_time":""},
   "evidence_sufficiency":{"flow":"高/中/低","strength":"高/中/低","market":"高/中/低","reason":""},
   "information_gaps":[""]
 }
-规则：证据必须引用题号和用户原文；主观判断不能写成市场事实；信息不足写入information_gaps；不得心理诊断、编造经历或输出JSON之外的文字。
+规则：证据必须引用题号和用户原文；flow_summary和strength_summary分别提炼2—3个最关键结论，用第二人称“你”只写一句35—70字的完整自然句，不逐条罗列、不重复“用户”、不使用分号；主观判断不能写成市场事实；信息不足写入information_gaps；不得心理诊断、编造经历或输出JSON之外的文字。
 `.trim();
 
 const ROUTES_PROMPT = `

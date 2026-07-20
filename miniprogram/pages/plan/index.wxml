@@ -52,13 +52,6 @@
     <view wx:if="{{item.whyThisMatters}}" class="why-matters">为什么重要：{{item.whyThisMatters}}</view>
   </view>
 
-  <view class="other-heading">另外两条路线为什么暂不优先</view>
-  <view wx:for="{{otherRoutes}}" wx:key="routeId" class="other-route">
-    <view class="other-name">路线{{item.routeId}} · {{item.routeName}}</view>
-    <view class="other-reason">{{item.reason}}</view>
-  </view>
-
-  <view class="plan-note">{{plan.planNote}}</view>
   <view class="button-stack">
     <button class="main-button" bindtap="onStartDay1" disabled="{{day1Started}}">{{day1Started ? 'Day 1 已开始' : '开始 Day 1'}}</button>
     <button class="secondary-button" bindtap="onBackToRoutes">重新选择路线</button>

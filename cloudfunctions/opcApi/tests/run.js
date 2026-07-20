@@ -186,6 +186,9 @@ async function main() {
   assert.strictEqual(repairedEvidence.flowEvidence[0].sourceQuote, SAMPLE_ANSWERS.Q2);
   assert.strictEqual(repairedEvidence.flowEvidence[0].evidenceType, "AI推测");
   assert.strictEqual(repairedEvidence.strengthEvidence[0].sourceAnswerId, "Q10");
+  assert.match(repairedEvidence.flowSummary, /^从你的回答看，你/);
+  assert.match(repairedEvidence.strengthSummary, /^从你的回答看，你/);
+  assert.doesNotMatch(repairedEvidence.flowSummary, /用户|；/);
   assert.strictEqual(repairedEvidence.marketInitialSignals.targetAudience, SAMPLE_ANSWERS.Q15);
   assert.strictEqual(repairedEvidence.background.weeklyAvailableTime, "7—14小时");
   assert.strictEqual(repairedEvidence.evidenceSufficiency.flow, "高");
@@ -201,6 +204,18 @@ async function main() {
     strengthEvidence: [],
   }, answerItems);
   assert.doesNotThrow(() => validateEvidence(shortQuoteEvidence, answerItems));
+
+  const suppliedSummaryEvidence = normalizeEvidence({
+    ...clone(DEMO_DATA.evidence),
+    flowSummary: "你喜欢研究AI；用户也容易长时间投入",
+  }, answerItems);
+  assert.strictEqual(suppliedSummaryEvidence.flowSummary, "你喜欢研究AI，你也容易长时间投入。");
+
+  const multiSentenceEvidence = normalizeEvidence({
+    ...clone(DEMO_DATA.evidence),
+    strengthSummary: "你擅长把复杂问题梳理清楚。你还有很多其他经历。",
+  }, answerItems);
+  assert.strictEqual(multiSentenceEvidence.strengthSummary, "你擅长把复杂问题梳理清楚。");
 
   const schemaFailure = new Error("flowEvidence[0].sourceQuote不是用户原文");
   schemaFailure.code = "AI_SCHEMA_INVALID";

@@ -79,6 +79,8 @@ Demo阶段`firstRevenueExpectation`只包含`cycle`、`amountRange`和`basis`。
 
 市场需求三题属于“用户判断”，不能直接当作真实市场事实。没有访谈、购买或咨询证据时，市场结论应显示“待验证”或较弱证据。为保证第四步可计算，`launchRequirements`仍提供保守数值区间，但必须固定标识为Demo假设，不能写成真实行业门槛。
 
+证据展示同时保留 `flowSummary` 和 `strengthSummary`。两者分别把心流、优势证据提炼成一句不超过80字的自然总结；底层 `flowEvidence`、`strengthEvidence` 仍保留题号与原回答，用于展开追溯，不能被摘要替代。
+
 ## 七、AI调用边界
 
 P0只有4次AI调用：

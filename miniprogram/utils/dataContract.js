@@ -44,6 +44,10 @@ function isNonEmptyArray(value) {
   return Array.isArray(value) && value.length > 0;
 }
 
+function isText(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
 function validateP0DemoData(data) {
   const errors = [];
 
@@ -77,6 +81,12 @@ function validateP0DemoData(data) {
     }
     if (!isNonEmptyArray(data.evidence.strengthEvidence)) {
       errors.push("evidence.strengthEvidence 至少需要1条");
+    }
+    if (!isText(data.evidence.flowSummary)) {
+      errors.push("evidence.flowSummary 不能为空");
+    }
+    if (!isText(data.evidence.strengthSummary)) {
+      errors.push("evidence.strengthSummary 不能为空");
     }
   }
 

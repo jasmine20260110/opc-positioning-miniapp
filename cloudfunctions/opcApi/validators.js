@@ -72,16 +72,53 @@ function normalizeEvidenceItems(items, answerMap, fallbackAnswerId) {
   }];
 }
 
+function cleanEvidenceClaim(value) {
+  const claim = String(value || "")
+    .trim()
+    .replace(/[，。；;、]+$/g, "")
+    .replace(/^(?:用户|本人|我)(?:的)?/, "");
+  const firstClause = claim.split(/[，。；;！？!?]/)[0];
+  return firstClause.length > 30 ? `${firstClause.slice(0, 29)}…` : firstClause;
+}
+
+function buildEvidenceSummary(items) {
+  const claims = [...new Set(items
+    .map((item) => cleanEvidenceClaim(item && item.claim))
+    .filter(Boolean))]
+    .slice(0, 3);
+  if (claims.length === 0) return "暂无足够信息形成总结。";
+  if (claims.length === 1) return `从你的回答看，你${claims[0]}。`;
+  if (claims.length === 2) return `从你的回答看，你${claims[0]}，并且${claims[1]}。`;
+  const summary = `从你的回答看，你${claims[0]}，${claims[1]}，并且${claims[2]}。`;
+  return summary.length <= 80
+    ? summary
+    : `从你的回答看，你${claims[0]}，并且${claims[1]}。`;
+}
+
+function normalizeEvidenceSummary(value, items) {
+  const firstSentence = String(value || "").split(/[。！？!?]/)[0];
+  const summary = firstSentence
+    .trim()
+    .replace(/用户/g, "你")
+    .replace(/[；;]+/g, "，");
+  if (summary && `${summary}。`.length <= 80) return `${summary}。`;
+  return buildEvidenceSummary(items);
+}
+
 function normalizeEvidence(data, answerItems) {
   const source = data && typeof data === "object" ? data : {};
   const answerMap = createAnswerMap(answerItems);
   const marketSignals = source.marketInitialSignals || {};
   const sufficiency = source.evidenceSufficiency || {};
+  const flowEvidence = normalizeEvidenceItems(source.flowEvidence, answerMap, "Q2");
+  const strengthEvidence = normalizeEvidenceItems(source.strengthEvidence, answerMap, "Q10");
 
   return {
     ...source,
-    flowEvidence: normalizeEvidenceItems(source.flowEvidence, answerMap, "Q2"),
-    strengthEvidence: normalizeEvidenceItems(source.strengthEvidence, answerMap, "Q10"),
+    flowEvidence,
+    flowSummary: normalizeEvidenceSummary(source.flowSummary, flowEvidence),
+    strengthEvidence,
+    strengthSummary: normalizeEvidenceSummary(source.strengthSummary, strengthEvidence),
     marketInitialSignals: {
       ...marketSignals,
       targetAudience: isText(marketSignals.targetAudience)
@@ -149,6 +186,8 @@ function validateEvidence(data, answerItems) {
   assert(data && typeof data === "object", "证据输出不是对象");
   assert(Array.isArray(data.flowEvidence) && data.flowEvidence.length > 0, "flowEvidence至少包含1条证据");
   assert(Array.isArray(data.strengthEvidence) && data.strengthEvidence.length > 0, "strengthEvidence至少包含1条证据");
+  assert(isText(data.flowSummary) && data.flowSummary.length <= 80, "flowSummary必须是80字以内的一句话总结");
+  assert(isText(data.strengthSummary) && data.strengthSummary.length <= 80, "strengthSummary必须是80字以内的一句话总结");
   data.flowEvidence.forEach((item, index) => validateEvidenceItem(item, answerMap, `flowEvidence[${index}]`));
   data.strengthEvidence.forEach((item, index) => validateEvidenceItem(item, answerMap, `strengthEvidence[${index}]`));
   assert(data.marketInitialSignals && typeof data.marketInitialSignals === "object", "缺少marketInitialSignals");

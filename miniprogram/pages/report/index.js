@@ -17,7 +17,7 @@ const MODE_META = {
   market: {
     step: "第三步 · 市场机会分析",
     title: "三条路线，分别值得怎么验证？",
-    subtitle: "Demo不接外部市场数据库，因此无法确认的市场判断会显示“待验证”。",
+    subtitle: "",
   },
   startup: {
     step: "第四步 · 启动条件确认",
@@ -45,7 +45,37 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
-function summarizeEvidence(items) {
+function cleanEvidenceClaim(value) {
+  const claim = String(value || "")
+    .trim()
+    .replace(/[，。；;、]+$/g, "")
+    .replace(/^(?:用户|本人|我)(?:的)?/, "");
+  const firstClause = claim.split(/[，。；;！？!?]/)[0];
+  return firstClause.length > 30 ? `${firstClause.slice(0, 29)}…` : firstClause;
+}
+
+function buildEvidenceParagraph(claims) {
+  const keyClaims = [...new Set(claims.map(cleanEvidenceClaim).filter(Boolean))].slice(0, 3);
+  if (keyClaims.length === 0) return "";
+  if (keyClaims.length === 1) return `从你的回答看，你${keyClaims[0]}。`;
+  if (keyClaims.length === 2) return `从你的回答看，你${keyClaims[0]}，并且${keyClaims[1]}。`;
+  const paragraph = `从你的回答看，你${keyClaims[0]}，${keyClaims[1]}，并且${keyClaims[2]}。`;
+  return paragraph.length <= 80
+    ? paragraph
+    : `从你的回答看，你${keyClaims[0]}，并且${keyClaims[1]}。`;
+}
+
+function normalizeEvidenceParagraph(summary, claims) {
+  const firstSentence = String(summary || "").split(/[。！？!?]/)[0];
+  const text = firstSentence
+    .trim()
+    .replace(/用户/g, "你")
+    .replace(/[；;]+/g, "，");
+  if (text && `${text}。`.length <= 80) return `${text}。`;
+  return buildEvidenceParagraph(claims);
+}
+
+function summarizeEvidence(items, summary) {
   const evidenceItems = Array.isArray(items) ? items : [];
   const claims = evidenceItems
     .map((item) => item && item.claim)
@@ -70,7 +100,7 @@ function summarizeEvidence(items) {
 
   return {
     hasEvidence: claims.length > 0 || sources.length > 0,
-    claims: claims.join("；"),
+    claims: normalizeEvidenceParagraph(summary, claims),
     evidenceTypes: evidenceTypes.join(" · "),
     sources: sources.join("；"),
     sourceIds: sourceItems.map((item) => item.id).join("、"),
@@ -194,8 +224,14 @@ Page({
     }
     this.setData({
       evidence: this.result.evidence,
-      flowEvidenceSummary: summarizeEvidence(this.result.evidence.flowEvidence),
-      strengthEvidenceSummary: summarizeEvidence(this.result.evidence.strengthEvidence),
+      flowEvidenceSummary: summarizeEvidence(
+        this.result.evidence.flowEvidence,
+        this.result.evidence.flowSummary,
+      ),
+      strengthEvidenceSummary: summarizeEvidence(
+        this.result.evidence.strengthEvidence,
+        this.result.evidence.strengthSummary,
+      ),
       routes: this.result.routes.map(decorateRoute),
       conditions,
     });

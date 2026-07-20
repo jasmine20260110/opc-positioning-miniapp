@@ -1,7 +1,7 @@
 <view class="screen report-screen">
   <view class="step-eyebrow">{{meta.step}}</view>
   <view class="page-title">{{meta.title}}</view>
-  <view class="page-subtitle">{{meta.subtitle}}</view>
+  <view wx:if="{{meta.subtitle}}" class="page-subtitle">{{meta.subtitle}}</view>
 
   <view class="analysis-path">
     <text class="analysis-path-stage {{mode === 'evidence' ? 'is-active' : ''}}">心流证据</text>
