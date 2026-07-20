@@ -55,20 +55,11 @@
       <text class="report-arrow">→</text>
     </button>
 
-    <view class="proof-bar">
-      <view class="proof-item">
-        <image class="proof-icon proof-users-icon" src="/images/home-users.svg" mode="aspectFit" />
-        <text class="proof-label">已有</text>
-        <text class="proof-number">128</text>
-        <text class="proof-label">人找到方向</text>
-      </view>
-      <view class="proof-separator"></view>
-      <view class="proof-item proof-item-time">
-        <image class="proof-icon" src="/images/home-duration.svg" mode="aspectFit" />
-        <text class="proof-label">平均用时</text>
-        <text class="proof-number">14</text>
-        <text class="proof-label">分钟</text>
-      </view>
-    </view>
+    <button
+      class="secondary-button home-demo-button"
+      loading="{{demoStarting}}"
+      disabled="{{demoStarting}}"
+      bindtap="onUseDemo"
+    >使用示例数据</button>
   </view>
 </view>

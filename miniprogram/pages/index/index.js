@@ -1,4 +1,4 @@
-const { SAMPLE_ANSWERS } = require("../../utils/demoData");
+const { DEMO_DATA } = require("../../utils/demoData");
 const { createQuestionSession } = require("../../utils/questionSession");
 
 const SESSION_KEY = "opc_mvp_session";
@@ -50,11 +50,25 @@ function getResumeDestination(session, result, plan) {
   };
 }
 
-function createSession(demoMode) {
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function createSession() {
   return createQuestionSession({
-    demoMode,
-    answers: demoMode ? { ...SAMPLE_ANSWERS } : {},
+    demoMode: false,
+    answers: {},
   });
+}
+
+function buildDemoSession() {
+  const session = clone(DEMO_DATA.session);
+  session.demoMode = true;
+  session.answers = DEMO_DATA.answers.items.reduce((answers, item) => {
+    answers[item.questionId] = item.answer;
+    return answers;
+  }, {});
+  return session;
 }
 
 Page({
@@ -95,7 +109,7 @@ Page({
   onStart() {
     let session = wx.getStorageSync(SESSION_KEY);
     if (!session) {
-      session = createSession(false);
+      session = createSession();
       wx.setStorageSync(SESSION_KEY, session);
     }
     this.openPage(INTRO_URL);
@@ -119,8 +133,11 @@ Page({
     wx.removeStorageSync(RESULT_KEY);
     wx.removeStorageSync(CONDITIONS_KEY);
     wx.removeStorageSync(PLAN_KEY);
-    wx.setStorageSync(SESSION_KEY, createSession(true));
-    this.openPage(QUESTION_URL);
+    wx.setStorageSync(SESSION_KEY, buildDemoSession());
+    wx.setStorageSync(RESULT_KEY, clone(DEMO_DATA));
+    wx.setStorageSync(CONDITIONS_KEY, clone(DEMO_DATA.session.startupConditions));
+    wx.setStorageSync(PLAN_KEY, clone(DEMO_DATA.plan));
+    this.openPage(REPORT_URL);
   },
 });
 

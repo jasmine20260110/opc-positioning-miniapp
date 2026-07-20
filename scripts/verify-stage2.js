@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { DEMO_DATA } = require("../miniprogram/utils/demoData");
 
 const automatorPath = process.env.MINIPROGRAM_AUTOMATOR_PATH;
 const cliPath = process.env.WECHAT_DEVTOOLS_CLI;
@@ -60,30 +59,12 @@ async function main() {
     const demoButton = await page.$(".secondary-button");
     assert(demoButton, "首页缺少示例数据入口");
     await demoButton.tap();
-    await page.waitFor(500);
+    await page.waitFor(600);
     page = await miniProgram.currentPage();
-    assert(page.path === "pages/question/index", "示例入口未进入问答页");
-    assert((await textOf(page, ".question-title")).length > 10, "问答页题目未显示");
-    screenshots.push(await capture(miniProgram, "02-question"));
-
-    for (let index = 0; index < 20; index += 1) {
-      await page.callMethod("onNext");
-      await page.waitFor(80);
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    page = await miniProgram.currentPage();
-    assert(page.path === "pages/loading/index", "20题提交后未进入Loading页");
-    assert((await page.$$(".stage-row")).length === 3, "Loading页必须展示3个分析阶段");
-    screenshots.push(await capture(miniProgram, "03-loading"));
-    await miniProgram.callWxMethod("setStorageSync", "opc_mvp_result", DEMO_DATA);
-    await miniProgram.callWxMethod("setStorageSync", "opc_mvp_session", DEMO_DATA.session);
-    page = await miniProgram.reLaunch("/pages/report/index?mode=evidence");
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    assert(page.path === "pages/report/index", "Loading后未进入报告页");
+    assert(page.path === "pages/report/index", "示例数据入口未直接进入报告页");
     assert((await page.data("mode")) === "evidence", "报告页没有从evidence模式开始");
     assert((await page.$$(".route-preview")).length === 3, "证据页必须展示3条路线预览");
-    screenshots.push(await capture(miniProgram, "04-evidence"));
+    screenshots.push(await capture(miniProgram, "02-evidence"));
 
     await page.callMethod("onShowMarket");
     await page.waitFor(200);
@@ -123,7 +104,8 @@ async function main() {
     page = await miniProgram.currentPage();
     assert(page.path === "pages/plan/index", "选择路线后未进入计划页");
     assert((await page.$$(".day-card")).length === 7, "计划页必须展示7天行动卡");
-    assert((await page.$$(".other-route")).length === 2, "计划页必须解释另外2条路线为何暂不优先");
+    assert((await page.$$(".other-route")).length === 0, "计划页不应展示另外两条路线说明");
+    assert((await page.$$(".button-stack")).length === 1, "计划页操作按钮缺失");
     screenshots.push(await capture(miniProgram, "09-plan"));
 
     await miniProgram.mockWxMethod("showModal", { confirm: true, cancel: false });

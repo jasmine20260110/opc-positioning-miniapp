@@ -193,61 +193,21 @@ page {
   text-decoration: none;
 }
 
-.proof-bar {
-  display: flex;
+.home-demo-button {
   width: 100%;
   height: 76rpx;
   margin-top: 24rpx;
-  padding: 0 22rpx;
-  align-items: center;
-  justify-content: center;
-  border: 1rpx solid rgba(235, 231, 226, 0.74);
-  border-radius: 18rpx;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8rpx 24rpx rgba(75, 63, 50, 0.08);
-  white-space: nowrap;
+  border: 2rpx solid #df152a;
+  border-radius: 14rpx;
+  background: #ffffff;
+  color: #d91024;
+  font-size: 30rpx;
+  font-weight: 650;
+  letter-spacing: 2rpx;
 }
 
-.proof-item {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-}
-
-.proof-item-time {
-  margin-left: 19rpx;
-}
-
-.proof-icon {
-  width: 37rpx;
-  height: 37rpx;
-  margin-right: 10rpx;
-  flex: 0 0 37rpx;
-}
-
-.proof-users-icon {
-  width: 49rpx;
-  flex-basis: 49rpx;
-}
-
-.proof-label {
-  color: #595653;
-  font-size: 23rpx;
-  letter-spacing: 0;
-}
-
-.proof-number {
-  margin: 0 4rpx;
-  color: #dc1428;
-  font-size: 31rpx;
-  font-weight: 700;
-}
-
-.proof-separator {
-  width: 1rpx;
-  height: 39rpx;
-  margin-left: 19rpx;
-  background: #ded9d2;
+.home-demo-button:active {
+  background: #fff4f3;
 }
 
 @media (max-height: 650px) {
@@ -282,7 +242,7 @@ page {
     margin-top: 22rpx;
   }
 
-  .proof-bar {
+  .home-demo-button {
     margin-top: 15rpx;
   }
 }

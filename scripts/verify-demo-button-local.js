@@ -27,7 +27,7 @@ function createWxMock({ navigateFails = false, relaunchFails = false } = {}) {
     ["opc_mvp_conditions", { old: true }],
     ["opc_mvp_plan", { old: true }],
   ]);
-  const calls = { navigateTo: 0, reLaunch: 0, modal: null };
+  const calls = { navigateTo: [], reLaunch: [], modal: null };
   return {
     storage,
     calls,
@@ -41,12 +41,12 @@ function createWxMock({ navigateFails = false, relaunchFails = false } = {}) {
       removeStorageSync(key) {
         storage.delete(key);
       },
-      navigateTo({ fail }) {
-        calls.navigateTo += 1;
+      navigateTo({ url, fail }) {
+        calls.navigateTo.push(url);
         if (navigateFails && fail) fail({ errMsg: "navigate failed" });
       },
-      reLaunch({ fail }) {
-        calls.reLaunch += 1;
+      reLaunch({ url, fail }) {
+        calls.reLaunch.push(url);
         if (relaunchFails && fail) fail({ errMsg: "relaunch failed" });
       },
       showModal(options) {
@@ -63,17 +63,17 @@ function main() {
   const session = normal.storage.get("opc_mvp_session");
   assert.strictEqual(session.demoMode, true);
   assert.strictEqual(Object.keys(session.answers).length, 20);
-  assert.strictEqual(normal.storage.has("opc_mvp_result"), false);
-  assert.strictEqual(normal.storage.has("opc_mvp_conditions"), false);
-  assert.strictEqual(normal.storage.has("opc_mvp_plan"), false);
-  assert.strictEqual(normal.calls.navigateTo, 1);
+  assert.strictEqual(normal.storage.get("opc_mvp_result").routes.length, 3);
+  assert.strictEqual(normal.storage.get("opc_mvp_conditions").weeklyAvailableTime, "7—14小时");
+  assert.strictEqual(normal.storage.get("opc_mvp_plan").days.length, 7);
+  assert.deepStrictEqual(normal.calls.navigateTo, ["/pages/report/index?mode=evidence"]);
   assert.strictEqual(normalPage.data.demoStarting, true);
 
   const fallback = createWxMock({ navigateFails: true });
   const fallbackPage = loadIndexPage(fallback.api);
   fallbackPage.onUseDemo();
-  assert.strictEqual(fallback.calls.navigateTo, 1);
-  assert.strictEqual(fallback.calls.reLaunch, 1);
+  assert.deepStrictEqual(fallback.calls.navigateTo, ["/pages/report/index?mode=evidence"]);
+  assert.deepStrictEqual(fallback.calls.reLaunch, ["/pages/report/index?mode=evidence"]);
   assert.strictEqual(fallback.calls.modal, null);
 
   const failed = createWxMock({ navigateFails: true, relaunchFails: true });
@@ -84,8 +84,8 @@ function main() {
 
   console.log(JSON.stringify({
     success: true,
-    demoAnswerCount: Object.keys(session.answers).length,
-    staleDataCleared: true,
+    demoRouteCount: normal.storage.get("opc_mvp_result").routes.length,
+    defaultDataLoaded: true,
     navigateFallbackVerified: true,
     visibleFailureFeedbackVerified: true,
   }, null, 2));
