@@ -3,6 +3,16 @@
   <view class="page-title">{{meta.title}}</view>
   <view class="page-subtitle">{{meta.subtitle}}</view>
 
+  <view class="analysis-path">
+    <text class="analysis-path-stage {{mode === 'evidence' ? 'is-active' : ''}}">心流证据</text>
+    <text class="analysis-path-arrow">→</text>
+    <text class="analysis-path-stage {{mode === 'market' ? 'is-active' : ''}}">市场机会</text>
+    <text class="analysis-path-arrow">→</text>
+    <text class="analysis-path-stage {{mode === 'startup' || mode === 'fit' ? 'is-active' : ''}}">现实约束</text>
+    <text class="analysis-path-arrow">→</text>
+    <text class="analysis-path-stage">7天高可行性验证</text>
+  </view>
+
   <block wx:if="{{mode === 'evidence'}}">
     <view class="card key-evidence-card">
       <view class="key-evidence-header">

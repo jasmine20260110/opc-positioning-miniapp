@@ -2,6 +2,16 @@
   <view class="step-eyebrow">第五步 · 生成7天行动计划</view>
   <view class="page-title">你的低后悔先行方向</view>
 
+  <view class="analysis-path">
+    <text class="analysis-path-stage">心流证据</text>
+    <text class="analysis-path-arrow">→</text>
+    <text class="analysis-path-stage">市场机会</text>
+    <text class="analysis-path-arrow">→</text>
+    <text class="analysis-path-stage">现实约束</text>
+    <text class="analysis-path-arrow">→</text>
+    <text class="analysis-path-stage is-active">7天高可行性验证</text>
+  </view>
+
   <view class="selected-route-card">
     <view class="selected-label">已确认路线 {{route.routeId}}</view>
     <view class="selected-name">{{route.routeName}}</view>

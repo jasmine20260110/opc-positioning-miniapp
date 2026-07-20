@@ -4,7 +4,7 @@ page {
 
 .home-screen {
   min-height: 100vh;
-  padding: 108rpx 68rpx 30rpx;
+  padding: 156rpx 68rpx 30rpx;
   overflow: hidden;
   background:
     radial-gradient(circle at 2% 44%, rgba(244, 235, 220, 0.45), transparent 27%),
@@ -19,6 +19,7 @@ page {
   margin: 0 auto;
   align-items: center;
   flex-direction: column;
+  transform: translateY(200rpx);
 }
 
 .home-logo {
@@ -36,17 +37,31 @@ page {
 }
 
 .home-subtitle {
-  margin-top: 9rpx;
+  margin-top: 10rpx;
   color: #696662;
-  font-size: 36rpx;
+  font-size: 26rpx;
   font-weight: 400;
-  letter-spacing: 2rpx;
+  letter-spacing: 1rpx;
   line-height: 1.35;
+}
+
+.home-methodology {
+  margin-top: 12rpx;
+  color: #4f4b48;
+  font-size: 30rpx;
+  font-weight: 500;
+  letter-spacing: 1rpx;
+  line-height: 1.35;
+}
+
+.home-methodology-accent {
+  color: #d80051;
+  font-weight: 700;
 }
 
 .gold-divider {
   display: flex;
-  margin-top: 24rpx;
+  margin-top: 13rpx;
   align-items: center;
 }
 

@@ -3,6 +3,9 @@
     <image class="home-logo" src="/images/home-logo.svg" mode="aspectFit" />
 
     <view class="home-title">OPC定位神器</view>
+    <view class="home-methodology">
+      <text>五种时间 · 以</text><text class="home-methodology-accent">心流时间</text><text>为切入口</text>
+    </view>
     <view class="home-subtitle">探索你的优势与定位</view>
 
     <view class="gold-divider">
@@ -10,7 +13,7 @@
       <view class="gold-divider-dot"></view>
       <view class="gold-divider-line"></view>
     </view>
-    <view class="home-slogan">开启OPC，笃定前行</view>
+    <view class="home-slogan">找到你现在最值得尝试的方向</view>
 
     <view class="benefit-card">
       <view class="benefit-row">
@@ -18,7 +21,7 @@
           <image class="benefit-icon" src="/images/home-clock.svg" mode="aspectFit" />
         </view>
         <view class="benefit-copy">
-          <view class="benefit-main"><text class="benefit-accent">~15分钟</text></view>
+          <view class="benefit-main"><text class="benefit-accent">≤15分钟</text></view>
           <view class="benefit-note">梳理热爱 × 擅长 × 市场</view>
         </view>
       </view>

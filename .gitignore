@@ -26,3 +26,8 @@ preview-info-*.json
 preview-qr-*.png
 *微信预览码*.png
 *微信开发版预览码*.png
+OPC定位神器-最新测试码-*.json
+OPC定位神器-最新测试码-*.png
+
+# Local visual review artifacts
+*-效果图.png
