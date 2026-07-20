@@ -210,3 +210,7 @@
   font-size: 22rpx;
   line-height: 1.65;
 }
+
+.feedback-button {
+  margin-top: 24rpx;
+}

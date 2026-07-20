@@ -146,11 +146,16 @@ async function callStructured({ label, model, systemPrompt, userPayload, validat
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
+      const correction = attempt > 0
+        && lastError
+        && lastError.code === "AI_SCHEMA_INVALID"
+        ? `\n上一次输出未通过字段校验：${String(lastError.message).slice(0, 160)}。请严格补齐该字段，并保持其余JSON结构不变。`
+        : "";
       const requestPayload = {
         model,
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `请根据以下输入以JSON格式输出：\n${JSON.stringify(userPayload)}` },
+          { role: "user", content: `请根据以下输入以JSON格式输出：\n${JSON.stringify(userPayload)}${correction}` },
         ],
         enable_thinking: false,
         temperature: 0.2,

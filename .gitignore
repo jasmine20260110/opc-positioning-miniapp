@@ -20,3 +20,9 @@ yarn-error.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Temporary WeChat preview artifacts
+preview-info-*.json
+preview-qr-*.png
+*微信预览码*.png
+*微信开发版预览码*.png

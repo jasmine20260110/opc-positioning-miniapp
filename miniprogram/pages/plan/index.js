@@ -104,4 +104,17 @@ Page({
       fail: () => wx.reLaunch({ url }),
     });
   },
+
+  onOpenFeedback() {
+    wx.navigateTo({
+      url: `/pages/feedback/index?routeId=${this.routeId}`,
+      fail: () => {
+        wx.showModal({
+          title: "暂时无法打开反馈页",
+          content: "请稍后重试。",
+          showCancel: false,
+        });
+      },
+    });
+  },
 });

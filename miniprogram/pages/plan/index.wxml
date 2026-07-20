@@ -55,4 +55,5 @@
   </view>
 
   <view class="disclaimer">本工具提供的建议仅供方向验证参考，不构成职业、投资或人生决策依据。</view>
+  <button class="secondary-button feedback-button" bindtap="onOpenFeedback">填写反馈</button>
 </view>

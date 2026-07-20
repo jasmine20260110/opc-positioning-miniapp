@@ -2,6 +2,12 @@ const EVIDENCE_TYPES = ["用户事实", "用户判断", "AI推测", "待验证"]
 const SUFFICIENCY = ["高", "中", "低"];
 const PAID_MARKET_MATURITY = ["明确付费", "付费较弱", "只有兴趣", "待验证"];
 const DEMAND_EVIDENCE_STRENGTH = ["强", "中", "弱", "待验证"];
+const DAILY_TO_WEEKLY_TIME = {
+  "不到1小时（碎片时间为主）": "3—7小时",
+  "1—2小时（早晚或周末）": "7—14小时",
+  "2—4小时（有较稳定的整块时间）": "14小时以上",
+  "4小时以上（目前主要精力在此）": "14小时以上",
+};
 
 class SchemaError extends Error {
   constructor(message) {
@@ -29,6 +35,86 @@ function createAnswerMap(answerItems) {
     map[item.questionId] = item.answer;
     return map;
   }, {});
+}
+
+function normalizeSufficiency(value) {
+  if (SUFFICIENCY.includes(value)) return value;
+  if (["较高", "很好", "充分"].includes(value)) return "高";
+  if (["一般", "较为充分", "中等"].includes(value)) return "中";
+  return "低";
+}
+
+function normalizeEvidenceItems(items, answerMap, fallbackAnswerId) {
+  const normalized = (Array.isArray(items) ? items : [])
+    .filter((item) => item && isText(item.sourceAnswerId) && answerMap[item.sourceAnswerId])
+    .map((item) => {
+      const answer = answerMap[item.sourceAnswerId];
+      const quoteIsGrounded = isText(item.sourceQuote)
+        && normalizeText(answer).includes(normalizeText(item.sourceQuote));
+      return {
+        ...item,
+        claim: isText(item.claim) ? item.claim : answer,
+        sourceQuote: quoteIsGrounded ? item.sourceQuote : answer,
+        evidenceType: EVIDENCE_TYPES.includes(item.evidenceType)
+          ? item.evidenceType
+          : "AI推测",
+      };
+    });
+
+  if (normalized.length > 0 || !answerMap[fallbackAnswerId]) return normalized;
+  return [{
+    claim: answerMap[fallbackAnswerId],
+    sourceAnswerId: fallbackAnswerId,
+    sourceQuote: answerMap[fallbackAnswerId],
+    evidenceType: "用户事实",
+  }];
+}
+
+function normalizeEvidence(data, answerItems) {
+  const source = data && typeof data === "object" ? data : {};
+  const answerMap = createAnswerMap(answerItems);
+  const marketSignals = source.marketInitialSignals || {};
+  const sufficiency = source.evidenceSufficiency || {};
+
+  return {
+    ...source,
+    flowEvidence: normalizeEvidenceItems(source.flowEvidence, answerMap, "Q2"),
+    strengthEvidence: normalizeEvidenceItems(source.strengthEvidence, answerMap, "Q10"),
+    marketInitialSignals: {
+      ...marketSignals,
+      targetAudience: isText(marketSignals.targetAudience)
+        ? marketSignals.targetAudience
+        : answerMap.Q15,
+      problem: isText(marketSignals.problem) ? marketSignals.problem : answerMap.Q16,
+      paymentJudgment: isText(marketSignals.paymentJudgment)
+        ? marketSignals.paymentJudgment
+        : answerMap.Q17,
+      evidenceType: EVIDENCE_TYPES.includes(marketSignals.evidenceType)
+        ? marketSignals.evidenceType
+        : "用户判断",
+    },
+    background: {
+      ...(source.background || {}),
+      ageStage: answerMap.Q18,
+      careerStatus: answerMap.Q19,
+      dailyAvailableTime: answerMap.Q20,
+      weeklyAvailableTime: DAILY_TO_WEEKLY_TIME[answerMap.Q20]
+        || (source.background && source.background.weeklyAvailableTime)
+        || "待确认",
+    },
+    evidenceSufficiency: {
+      ...sufficiency,
+      flow: normalizeSufficiency(sufficiency.flow),
+      strength: normalizeSufficiency(sufficiency.strength),
+      market: normalizeSufficiency(sufficiency.market),
+      reason: isText(sufficiency.reason)
+        ? sufficiency.reason
+        : "已依据原始回答补齐结构，仍需通过真实行动继续验证。",
+    },
+    informationGaps: Array.isArray(source.informationGaps)
+      ? source.informationGaps
+      : [],
+  };
 }
 
 function validateAnswerItems(answerItems) {
@@ -213,6 +299,7 @@ function validatePlan(data) {
 
 module.exports = {
   SchemaError,
+  normalizeEvidence,
   validateAnswerItems,
   validateEvidence,
   validateMarket,

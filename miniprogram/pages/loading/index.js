@@ -112,6 +112,11 @@ Page({
     } catch (error) {
       if (this.runId !== currentRunId) return;
       const activeIndex = this.data.stages.findIndex((stage) => stage.status === "active");
+      console.warn("[loading] AI分析失败", {
+        stageIndex: activeIndex,
+        code: error && error.code,
+        details: error && error.details,
+      });
       if (activeIndex >= 0) {
         this.setData({ [`stages[${activeIndex}].status`]: "error" });
       }

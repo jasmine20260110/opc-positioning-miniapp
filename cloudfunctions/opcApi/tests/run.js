@@ -5,6 +5,7 @@ const { generatePlan, runAnalysis } = require("../analysis");
 const { getConfig, resolveEndpoint, supportsJsonObject } = require("../bailianClient");
 const { snakeToCamel } = require("../caseConverter");
 const {
+  normalizeEvidence,
   validateEvidence,
   validateMarket,
   validatePlan,
@@ -107,6 +108,27 @@ async function main() {
   emptyEvidence.flowEvidence = [];
   assert.throws(() => validateEvidence(emptyEvidence, answerItems), /至少包含1条证据/);
 
+  const repairedEvidence = normalizeEvidence({
+    flowEvidence: [{
+      claim: "喜欢长时间整理AI教程",
+      sourceAnswerId: "Q2",
+      sourceQuote: "这是一段被改写的引用",
+      evidenceType: "事实",
+    }],
+    strengthEvidence: [],
+    marketInitialSignals: {},
+    background: {},
+    evidenceSufficiency: { flow: "较高", strength: "一般" },
+  }, answerItems);
+  assert.doesNotThrow(() => validateEvidence(repairedEvidence, answerItems));
+  assert.strictEqual(repairedEvidence.flowEvidence[0].sourceQuote, SAMPLE_ANSWERS.Q2);
+  assert.strictEqual(repairedEvidence.flowEvidence[0].evidenceType, "AI推测");
+  assert.strictEqual(repairedEvidence.strengthEvidence[0].sourceAnswerId, "Q10");
+  assert.strictEqual(repairedEvidence.marketInitialSignals.targetAudience, SAMPLE_ANSWERS.Q15);
+  assert.strictEqual(repairedEvidence.background.weeklyAvailableTime, "7—14小时");
+  assert.strictEqual(repairedEvidence.evidenceSufficiency.flow, "高");
+  assert.strictEqual(repairedEvidence.evidenceSufficiency.strength, "中");
+
   const duplicateRoutes = baseRoutes();
   duplicateRoutes[1].routeName = duplicateRoutes[0].routeName;
   assert.throws(() => validateRoutes({
@@ -165,6 +187,7 @@ async function main() {
     marketFieldsPerRoute: 5,
     planDayCount: planResult.plan.days.length,
     snakeToCamelValidated: true,
+    incompleteEvidenceRepaired: true,
     invalidSchemaRejected: true,
   }, null, 2));
 }

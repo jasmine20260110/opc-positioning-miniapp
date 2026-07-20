@@ -4,30 +4,72 @@
   <view class="page-subtitle">{{meta.subtitle}}</view>
 
   <block wx:if="{{mode === 'evidence'}}">
-    <view class="card evidence-summary">
-      <view class="section-title">你的心流证据</view>
-      <view class="evidence-combined">
-        <view wx:if="{{flowEvidenceSummary.hasEvidence}}">
-          <view class="evidence-claims">{{flowEvidenceSummary.claims}}</view>
-          <view wx:if="{{flowEvidenceSummary.evidenceTypes}}" class="evidence-meta">
-            <text class="evidence-tag">{{flowEvidenceSummary.evidenceTypes}}</text>
-          </view>
-          <view wx:if="{{flowEvidenceSummary.sources}}" class="quote">{{flowEvidenceSummary.sources}}</view>
+    <view class="card key-evidence-card">
+      <view class="key-evidence-header">
+        <view class="section-title">你的关键证据</view>
+      </view>
+
+      <view class="evidence-signal">
+        <view class="evidence-signal-heading">
+          <text class="evidence-signal-icon">流</text>
+          <text class="evidence-signal-name">心流</text>
         </view>
+        <block wx:if="{{flowEvidenceSummary.hasEvidence}}">
+          <view class="evidence-claims">{{flowEvidenceSummary.claims}}</view>
+          <button
+            wx:if="{{flowEvidenceSummary.sourceIds}}"
+            class="evidence-source-toggle"
+            data-section="flow"
+            bindtap="onToggleEvidenceSource"
+          >
+            <text>{{flowSourceExpanded ? '收起原回答' : '查看 ' + flowEvidenceSummary.sourceIds + ' 原回答'}}</text>
+            <text class="evidence-toggle-arrow {{flowSourceExpanded ? 'is-expanded' : ''}}">⌄</text>
+          </button>
+          <view wx:if="{{flowSourceExpanded}}" class="evidence-source-list">
+            <view
+              wx:for="{{flowEvidenceSummary.sourceItems}}"
+              wx:for-item="source"
+              wx:key="key"
+              class="evidence-source-item"
+            >
+              <text class="evidence-source-id">{{source.id}}</text>
+              <text class="evidence-source-quote">{{source.quote}}</text>
+            </view>
+          </view>
+        </block>
         <view wx:else class="evidence-empty">暂无可展示的心流证据</view>
       </view>
-    </view>
 
-    <view class="card evidence-summary">
-      <view class="section-title">你的优势证据</view>
-      <view class="evidence-combined">
-        <view wx:if="{{strengthEvidenceSummary.hasEvidence}}">
-          <view class="evidence-claims">{{strengthEvidenceSummary.claims}}</view>
-          <view wx:if="{{strengthEvidenceSummary.evidenceTypes}}" class="evidence-meta">
-            <text class="evidence-tag">{{strengthEvidenceSummary.evidenceTypes}}</text>
-          </view>
-          <view wx:if="{{strengthEvidenceSummary.sources}}" class="quote">{{strengthEvidenceSummary.sources}}</view>
+      <view class="evidence-divider"></view>
+
+      <view class="evidence-signal">
+        <view class="evidence-signal-heading">
+          <text class="evidence-signal-icon">优</text>
+          <text class="evidence-signal-name">优势</text>
         </view>
+        <block wx:if="{{strengthEvidenceSummary.hasEvidence}}">
+          <view class="evidence-claims">{{strengthEvidenceSummary.claims}}</view>
+          <button
+            wx:if="{{strengthEvidenceSummary.sourceIds}}"
+            class="evidence-source-toggle"
+            data-section="strength"
+            bindtap="onToggleEvidenceSource"
+          >
+            <text>{{strengthSourceExpanded ? '收起原回答' : '查看 ' + strengthEvidenceSummary.sourceIds + ' 原回答'}}</text>
+            <text class="evidence-toggle-arrow {{strengthSourceExpanded ? 'is-expanded' : ''}}">⌄</text>
+          </button>
+          <view wx:if="{{strengthSourceExpanded}}" class="evidence-source-list">
+            <view
+              wx:for="{{strengthEvidenceSummary.sourceItems}}"
+              wx:for-item="source"
+              wx:key="key"
+              class="evidence-source-item"
+            >
+              <text class="evidence-source-id">{{source.id}}</text>
+              <text class="evidence-source-quote">{{source.quote}}</text>
+            </view>
+          </view>
+        </block>
         <view wx:else class="evidence-empty">暂无可展示的优势证据</view>
       </view>
     </view>
@@ -143,11 +185,11 @@
   <block wx:if="{{mode === 'fit'}}">
     <view wx:for="{{routes}}" wx:key="routeId" class="card fit-card">
       <view class="fit-head">
-        <view>
-          <view class="route-id">路线 {{item.routeId}}</view>
+        <view class="route-id">路线 {{item.routeId}}</view>
+        <view class="fit-title-row">
           <view class="fit-name">{{item.routeName}}</view>
+          <view class="fit-result status-{{item.fitResultClass}}">{{item.startupFit.result}}</view>
         </view>
-        <view class="fit-result status-{{item.fitResultClass}}">{{item.startupFit.result}}</view>
       </view>
       <view class="dimension-grid">
         <view wx:for="{{item.fitDimensions}}" wx:for-item="dimension" wx:key="name" class="dimension-item">

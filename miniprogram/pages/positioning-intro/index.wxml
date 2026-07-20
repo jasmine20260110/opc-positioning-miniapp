@@ -2,7 +2,7 @@
   <view class="intro-artboard">
     <image
       class="intro-image"
-      src="/images/opc-positioning-intro.jpg"
+      src="/images/opc-positioning-intro-v2.jpg"
       mode="scaleToFill"
     />
     <button

@@ -92,10 +92,19 @@ async function main() {
     screenshots.push(await capture(miniProgram, "05-market"));
 
     await page.callMethod("onShowStartup");
-    await page.waitFor(200);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    page = await miniProgram.currentPage();
+    assert(page.path === "pages/opc-transition/index", "市场页没有进入OPC定位过渡页");
+    assert((await page.$$(".transition-button")).length === 1, "过渡页缺少红色箭头点击区");
+    screenshots.push(await capture(miniProgram, "06-opc-transition"));
+
+    await page.callMethod("onContinue");
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    page = await miniProgram.currentPage();
+    assert(page.path === "pages/report/index", "过渡页没有进入启动条件页");
     assert((await page.data("mode")) === "startup", "未进入startup模式");
     assert((await page.$$(".condition-card")).length === 4, "启动条件页必须展示4项条件");
-    screenshots.push(await capture(miniProgram, "06-startup"));
+    screenshots.push(await capture(miniProgram, "07-startup"));
 
     await page.callMethod("onShowFit");
     await page.waitFor(200);
@@ -104,7 +113,7 @@ async function main() {
     assert((await page.$$(".dimension-item")).length === 12, "每条路线必须展示4个适配维度");
     const fitText = await textOf(page, ".report-screen");
     assert(!fitText.includes("internalScore"), "前端不应展示内部精确分数");
-    screenshots.push(await capture(miniProgram, "07-fit"));
+    screenshots.push(await capture(miniProgram, "08-fit"));
 
     const routeButton = await page.$(".route-select-button");
     assert(routeButton, "适配页缺少路线选择按钮");
@@ -114,7 +123,7 @@ async function main() {
     assert(page.path === "pages/plan/index", "选择路线后未进入计划页");
     assert((await page.$$(".day-card")).length === 7, "计划页必须展示7天行动卡");
     assert((await page.$$(".other-route")).length === 2, "计划页必须解释另外2条路线为何暂不优先");
-    screenshots.push(await capture(miniProgram, "08-plan"));
+    screenshots.push(await capture(miniProgram, "09-plan"));
 
     await miniProgram.mockWxMethod("showModal", { confirm: true, cancel: false });
     await page.callMethod("onStartDay1");

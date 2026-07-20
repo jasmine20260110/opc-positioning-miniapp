@@ -73,6 +73,7 @@ exports.main = async (event = {}) => {
       action,
       code: safeError.code,
       retryable: safeError.retryable,
+      details: safeError.details,
     });
     return { ok: false, error: safeError };
   }

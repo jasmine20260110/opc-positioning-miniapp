@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="1080" viewBox="0 0 390 1080">
+  <rect width="390" height="1080" fill="#f5f1ec"/>
+  <g font-family="Microsoft YaHei, PingFang SC, sans-serif">
+    <text x="16" y="32" fill="#be3a32" font-size="12" font-weight="600" letter-spacing="1">第二步 · AI证据提取</text>
+    <text x="16" y="67" fill="#211e1c" font-size="24" font-weight="700">先看依据，再看方向</text>
+    <text x="16" y="96" fill="#716a65" font-size="13.5">以下结论来自你的原始回答；推测和缺口会被单独标记。</text>
+
+    <rect x="16" y="116" width="358" height="264" rx="12" fill="#ffffff" stroke="#e7dfd8"/>
+    <text x="32" y="147" fill="#2b2724" font-size="16" font-weight="650">你的心流证据</text>
+    <text x="32" y="181" fill="#352f2c" font-size="13.5" font-weight="600">
+      <tspan x="32" dy="0">喜欢研究AI并把复杂操作转化为可执行步骤；</tspan>
+      <tspan x="32" dy="23">制作AI工作流教程时容易进入长时间投入状态</tspan>
+    </text>
+    <rect x="32" y="229" width="50" height="22" rx="11" fill="#e9f3ec"/>
+    <text x="42" y="244" fill="#2e7547" font-size="9.5">用户事实</text>
+    <rect x="32" y="263" width="326" height="98" rx="7" fill="#f3f0ed"/>
+    <text x="42" y="284" fill="#736b65" font-size="11.5">
+      <tspan x="42" dy="0">Q1｜“我愿意长期研究AI工具，并把复杂操作整理成</tspan>
+      <tspan x="42" dy="19">普通人能照着完成的步骤。”；Q2｜“最近制作AI工作流</tspan>
+      <tspan x="42" dy="19">教程时，我连续整理了三个小时，结束后还想继续</tspan>
+      <tspan x="42" dy="19">优化。”</tspan>
+    </text>
+
+    <rect x="16" y="392" width="358" height="264" rx="12" fill="#ffffff" stroke="#e7dfd8"/>
+    <text x="32" y="423" fill="#2b2724" font-size="16" font-weight="650">你的优势证据</text>
+    <text x="32" y="457" fill="#352f2c" font-size="13.5" font-weight="600">
+      <tspan x="32" dy="0">能够发现流程混乱点并重新整理；已有项目规划、</tspan>
+      <tspan x="32" dy="23">内容整理和流程优化经验</tspan>
+    </text>
+    <rect x="32" y="505" width="50" height="22" rx="11" fill="#e9f3ec"/>
+    <text x="42" y="520" fill="#2e7547" font-size="9.5">用户事实</text>
+    <rect x="32" y="539" width="326" height="98" rx="7" fill="#f3f0ed"/>
+    <text x="42" y="560" fill="#736b65" font-size="11.5">
+      <tspan x="42" dy="0">Q10｜“我比较容易发现流程里的混乱点，并把它们</tspan>
+      <tspan x="42" dy="19">重新整理成清晰步骤。”；Q11｜“我做过AI实践手册、</tspan>
+      <tspan x="42" dy="19">个人项目管理台和小程序需求梳理，主要负责结构设计</tspan>
+      <tspan x="42" dy="19">和落地推进。”</tspan>
+    </text>
+
+    <rect x="16" y="668" width="358" height="48" rx="8" fill="#2d2926"/>
+    <text x="28" y="697" fill="#ffffff" font-size="11">全职工作，考虑转型</text>
+    <text x="246" y="697" fill="#ffffff" font-size="11">每周可投入 7—14小时</text>
+
+    <text x="16" y="760" fill="#2d2926" font-size="17" font-weight="700">3条候选路线预览</text>
+    <rect x="16" y="780" width="358" height="190" rx="12" fill="#ffffff" stroke="#e7dfd8"/>
+    <text x="32" y="810" fill="#be3a32" font-size="10.5" font-weight="700" letter-spacing=".5">路线 A</text>
+    <text x="271" y="810" fill="#8c837c" font-size="10.5">证据充分度：中</text>
+    <text x="32" y="844" fill="#2b2724" font-size="17" font-weight="700">职场人的AI行动教练</text>
+    <text x="32" y="875" fill="#766e68" font-size="13">
+      <tspan x="32" dy="0">帮助想转型的职场人用AI把模糊方向变成</tspan>
+      <tspan x="32" dy="21">一周行动。</tspan>
+    </text>
+    <rect x="32" y="924" width="326" height="1" fill="#eee7e2"/>
+    <text x="32" y="951" fill="#968d85" font-size="11">下方继续展示目标用户、解决问题、变现方式和风险</text>
+
+    <text x="195" y="1011" text-anchor="middle" fill="#968d85" font-size="11">继续向下滚动查看另外两条路线与操作按钮</text>
+  </g>
+</svg>

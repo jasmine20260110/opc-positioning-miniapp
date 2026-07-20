@@ -1,6 +1,7 @@
 const { callStructured, getConfig } = require("./bailianClient");
 const { EVIDENCE_PROMPT, MARKET_PROMPT, PLAN_PROMPT, ROUTES_PROMPT } = require("./prompts");
 const {
+  normalizeEvidence,
   validateAnswerItems,
   validateEvidence,
   validateMarket,
@@ -29,7 +30,7 @@ async function extractEvidence(input, caller = callStructured) {
     model: config.fastModel,
     systemPrompt: EVIDENCE_PROMPT,
     userPayload: { answers: answerItems },
-    validate: (data) => validateEvidence(data, answerItems),
+    validate: (data) => validateEvidence(normalizeEvidence(data, answerItems), answerItems),
   });
   return {
     evidence: response.data,

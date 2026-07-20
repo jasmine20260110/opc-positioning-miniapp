@@ -1,18 +1,18 @@
 page {
   overflow: hidden;
-  background: #ffffff;
+  background: #f7f1e8;
 }
 
-.intro-page {
+.transition-page {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: #f7f1e8;
 }
 
-.intro-artboard {
+.transition-artboard {
   position: relative;
   width: 100vw;
   height: 150vw;
@@ -20,22 +20,22 @@ page {
   max-height: 100vh;
 }
 
-.intro-image {
+.transition-image {
   width: 100%;
   height: 100%;
 }
 
-.intro-enter-button {
+.transition-button {
   position: absolute;
-  right: 9.6%;
-  bottom: 3.5%;
-  left: 9.6%;
-  height: 7.2%;
+  right: 37.5%;
+  bottom: 4.8%;
+  left: 37.5%;
+  height: 10%;
   border: 0;
   background: transparent;
   opacity: 0;
 }
 
-.intro-enter-button::after {
+.transition-button::after {
   border: 0;
 }

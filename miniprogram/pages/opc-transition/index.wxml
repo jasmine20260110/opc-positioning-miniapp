@@ -1,0 +1,15 @@
+<view class="transition-page">
+  <view class="transition-artboard">
+    <image
+      class="transition-image"
+      src="/images/opc-three-routes-transition-v1.jpg"
+      mode="scaleToFill"
+    />
+    <button
+      class="transition-button"
+      bindtap="onContinue"
+      disabled="{{entering}}"
+      aria-label="继续探索最适合的OPC定位"
+    ></button>
+  </view>
+</view>

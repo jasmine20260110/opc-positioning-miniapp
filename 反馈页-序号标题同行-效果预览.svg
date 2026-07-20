@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="584" height="2070" viewBox="0 0 584 2070">
+  <rect width="584" height="2070" fill="#f7f1ec"/>
+  <g font-family="Microsoft YaHei, PingFang SC, sans-serif">
+    <text x="15" y="51" fill="#c83f36" font-size="20" font-weight="700">使用反馈</text>
+    <text x="15" y="102" fill="#211e1c" font-size="38" font-weight="700">你的真实感受很重要</text>
+    <text x="15" y="151" fill="#716a65" font-size="23">这份反馈不会改变已经生成的路线和7天计划。</text>
+
+    <rect x="14" y="182" width="556" height="250" rx="19" fill="#fff" stroke="#e6ddd6"/>
+    <circle cx="55" cy="224" r="18" fill="#f9e9e6"/>
+    <text x="55" y="231" text-anchor="middle" fill="#be3a32" font-size="16" font-weight="700">1</text>
+    <text x="88" y="233" fill="#2b2724" font-size="23" font-weight="700">这三个方向中，有没有哪个最打动你？</text>
+    <rect x="38" y="267" width="508" height="128" rx="15" fill="#faf8f6" stroke="#dfd5ce" stroke-width="1.5"/>
+    <text x="55" y="301" fill="#9a918a" font-size="18">可以写路线名称，也可以回答“都没有”</text>
+    <text x="546" y="418" text-anchor="end" fill="#9a918a" font-size="16">0/500</text>
+
+    <rect x="14" y="454" width="556" height="300" rx="19" fill="#fff" stroke="#e6ddd6"/>
+    <circle cx="55" cy="496" r="18" fill="#f9e9e6"/>
+    <text x="55" y="503" text-anchor="middle" fill="#be3a32" font-size="16" font-weight="700">2</text>
+    <text x="88" y="505" fill="#2b2724" font-size="23" font-weight="700">这条为什么打动你？</text>
+    <rect x="38" y="540" width="508" height="160" rx="15" fill="#faf8f6" stroke="#dfd5ce" stroke-width="1.5"/>
+    <text x="55" y="574" fill="#9a918a" font-size="18">选填，可以说说最吸引你的部分</text>
+    <text x="546" y="738" text-anchor="end" fill="#9a918a" font-size="16">0/500</text>
+
+    <rect x="14" y="776" width="556" height="330" rx="19" fill="#fff" stroke="#e6ddd6"/>
+    <circle cx="55" cy="818" r="18" fill="#f9e9e6"/>
+    <text x="55" y="825" text-anchor="middle" fill="#be3a32" font-size="16" font-weight="700">3</text>
+    <text x="88" y="819" fill="#2b2724" font-size="22" font-weight="700">
+      <tspan x="88" dy="0">如果对整体使用体验，打个分（0-10分，</tspan>
+      <tspan x="88" dy="34">分值越大体验越好），你打几分？</tspan>
+    </text>
+    <rect x="38" y="884" width="508" height="160" rx="15" fill="#faf8f6" stroke="#dfd5ce" stroke-width="1.5"/>
+    <text x="55" y="918" fill="#9a918a" font-size="18">例如：8分，因为整体清晰，但部分说明有些重复</text>
+    <text x="546" y="1080" text-anchor="end" fill="#9a918a" font-size="16">0/500</text>
+
+    <rect x="14" y="1128" width="556" height="300" rx="19" fill="#fff" stroke="#e6ddd6"/>
+    <circle cx="55" cy="1170" r="18" fill="#f9e9e6"/>
+    <text x="55" y="1177" text-anchor="middle" fill="#be3a32" font-size="16" font-weight="700">4</text>
+    <text x="88" y="1179" fill="#2b2724" font-size="23" font-weight="700">你现在是否愿意执行Day1？</text>
+    <rect x="38" y="1214" width="508" height="160" rx="15" fill="#faf8f6" stroke="#dfd5ce" stroke-width="1.5"/>
+    <text x="55" y="1248" fill="#9a918a" font-size="18">请说说你的意愿、顾虑或暂时不想执行的原因</text>
+    <text x="546" y="1412" text-anchor="end" fill="#9a918a" font-size="16">0/500</text>
+
+    <rect x="14" y="1450" width="556" height="300" rx="19" fill="#fff" stroke="#e6ddd6"/>
+    <circle cx="55" cy="1492" r="18" fill="#f9e9e6"/>
+    <text x="55" y="1499" text-anchor="middle" fill="#be3a32" font-size="16" font-weight="700">5</text>
+    <text x="88" y="1501" fill="#2b2724" font-size="23" font-weight="700">其他建议</text>
+    <rect x="38" y="1536" width="508" height="160" rx="15" fill="#faf8f6" stroke="#dfd5ce" stroke-width="1.5"/>
+    <text x="55" y="1570" fill="#9a918a" font-size="18">选填，欢迎告诉我们哪里还可以改进</text>
+    <text x="546" y="1734" text-anchor="end" fill="#9a918a" font-size="16">0/500</text>
+
+    <rect x="14" y="1776" width="556" height="70" rx="15" fill="#ece7e2"/>
+    <text x="32" y="1819" fill="#766e68" font-size="18">请不要填写姓名、联系方式、公司机密或客户信息。</text>
+
+    <rect x="14" y="1874" width="556" height="76" rx="15" fill="#c83f36"/>
+    <text x="292" y="1922" text-anchor="middle" fill="#fff" font-size="24" font-weight="700">提交反馈</text>
+    <rect x="14" y="1970" width="556" height="76" rx="15" fill="#fff" stroke="#d8cec6" stroke-width="1.5"/>
+    <text x="292" y="2018" text-anchor="middle" fill="#4f4843" font-size="24" font-weight="700">返回7天计划</text>
+  </g>
+</svg>

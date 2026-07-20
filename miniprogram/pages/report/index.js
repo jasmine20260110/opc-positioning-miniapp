@@ -6,12 +6,13 @@ const { calculateStartupFit } = require("../../utils/startupFitRules");
 const RESULT_KEY = "opc_mvp_result";
 const SESSION_KEY = "opc_mvp_session";
 const CONDITIONS_KEY = "opc_mvp_conditions";
+const OPC_TRANSITION_URL = "/pages/opc-transition/index";
 
 const MODE_META = {
   evidence: {
     step: "第二步 · AI证据提取",
     title: "先看依据，再看方向",
-    subtitle: "以下结论来自你的原始回答；推测和缺口会被单独标记。",
+    subtitle: "AI从你的回答中提炼出关键证据，点击可查看原回答。",
   },
   market: {
     step: "第三步 · 市场机会分析",
@@ -21,7 +22,7 @@ const MODE_META = {
   startup: {
     step: "第四步 · 启动条件确认",
     title: "什么方向适合现在的你？",
-    subtitle: "确认4项现实条件，预计30—60秒。第20题的时间答案会自动预填。",
+    subtitle: "确认4项现实条件，预计30—60秒。",
   },
   fit: {
     step: "第四步 · 个人启动适配",
@@ -59,12 +60,21 @@ function summarizeEvidence(items) {
       return `${sourceLabel}“${item.sourceQuote}”`;
     })
     .filter(Boolean);
+  const sourceItems = evidenceItems
+    .filter((item) => item && item.sourceQuote)
+    .map((item, index) => ({
+      key: `${item.sourceAnswerId || "source"}-${index}`,
+      id: item.sourceAnswerId || "原回答",
+      quote: item.sourceQuote,
+    }));
 
   return {
     hasEvidence: claims.length > 0 || sources.length > 0,
     claims: claims.join("；"),
     evidenceTypes: evidenceTypes.join(" · "),
     sources: sources.join("；"),
+    sourceIds: sourceItems.map((item) => item.id).join("、"),
+    sourceItems,
   };
 }
 
@@ -152,6 +162,8 @@ Page({
     evidence: {},
     flowEvidenceSummary: {},
     strengthEvidenceSummary: {},
+    flowSourceExpanded: false,
+    strengthSourceExpanded: false,
     routes: [],
     conditions: {},
     latestRevenueOptions: ["1个月内", "3个月内", "6个月内", "可以更久"],
@@ -217,12 +229,34 @@ Page({
     wx.navigateBack({ delta: 1 });
   },
 
+  onToggleEvidenceSource(e) {
+    const section = e.currentTarget.dataset.section;
+    const stateKey = section === "strength"
+      ? "strengthSourceExpanded"
+      : "flowSourceExpanded";
+    this.setData({ [stateKey]: !this.data[stateKey] });
+  },
+
   onShowMarket() {
     this.setMode("market");
   },
 
   onShowStartup() {
-    this.setMode("startup");
+    wx.navigateTo({
+      url: OPC_TRANSITION_URL,
+      fail: () => {
+        wx.redirectTo({
+          url: OPC_TRANSITION_URL,
+          fail: () => {
+            wx.showModal({
+              title: "页面打开失败",
+              content: "请在微信开发者工具中重新编译后再试。",
+              showCancel: false,
+            });
+          },
+        });
+      },
+    });
   },
 
   onShowFit() {
@@ -387,4 +421,4 @@ Page({
   },
 });
 
-module.exports = { summarizeEvidence };
+module.exports = { summarizeEvidence, OPC_TRANSITION_URL };

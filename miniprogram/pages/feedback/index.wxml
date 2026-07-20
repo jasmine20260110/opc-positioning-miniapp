@@ -1,0 +1,87 @@
+<view class="screen feedback-screen">
+  <view class="step-eyebrow">使用反馈</view>
+  <view class="page-title">你的真实感受很重要</view>
+  <view class="page-subtitle">这份反馈不会改变已经生成的路线和7天计划。</view>
+
+  <view class="question-card">
+    <view class="question-header">
+      <view class="question-number">1</view>
+      <view class="question-title">这三个方向中，有没有哪个最打动你？</view>
+    </view>
+    <textarea
+      class="feedback-textarea feedback-textarea-compact"
+      maxlength="500"
+      value="{{form.mostResonantDirection}}"
+      placeholder="可以写路线名称，也可以回答“都没有”"
+      bindinput="onMostResonantDirectionInput"
+    ></textarea>
+    <view class="character-count">{{form.mostResonantDirection.length}}/500</view>
+  </view>
+
+  <view class="question-card">
+    <view class="question-header">
+      <view class="question-number">2</view>
+      <view class="question-title">这条为什么打动你？</view>
+    </view>
+    <textarea
+      class="feedback-textarea"
+      maxlength="500"
+      value="{{form.resonanceReason}}"
+      placeholder="选填，可以说说最吸引你的部分"
+      bindinput="onResonanceReasonInput"
+    ></textarea>
+    <view class="character-count">{{form.resonanceReason.length}}/500</view>
+  </view>
+
+  <view class="question-card">
+    <view class="question-header">
+      <view class="question-number">3</view>
+      <view class="question-title">如果对整体使用体验，打个分（0-10分，分值越大体验越好），你打几分？</view>
+    </view>
+    <textarea
+      class="feedback-textarea feedback-textarea-compact"
+      maxlength="500"
+      value="{{form.experienceFeedback}}"
+      placeholder="例如：8分，因为整体清晰，但部分说明有些重复"
+      bindinput="onExperienceFeedbackInput"
+    ></textarea>
+    <view class="character-count">{{form.experienceFeedback.length}}/500</view>
+  </view>
+
+  <view class="question-card">
+    <view class="question-header">
+      <view class="question-number">4</view>
+      <view class="question-title">你现在是否愿意执行Day1？</view>
+    </view>
+    <textarea
+      class="feedback-textarea feedback-textarea-compact"
+      maxlength="500"
+      value="{{form.day1Willingness}}"
+      placeholder="请说说你的意愿、顾虑或暂时不想执行的原因"
+      bindinput="onDay1WillingnessInput"
+    ></textarea>
+    <view class="character-count">{{form.day1Willingness.length}}/500</view>
+  </view>
+
+  <view class="question-card">
+    <view class="question-header">
+      <view class="question-number">5</view>
+      <view class="question-title">其他建议</view>
+    </view>
+    <textarea
+      class="feedback-textarea"
+      maxlength="500"
+      value="{{form.otherSuggestions}}"
+      placeholder="选填，欢迎告诉我们哪里还可以改进"
+      bindinput="onOtherSuggestionsInput"
+    ></textarea>
+    <view class="character-count">{{form.otherSuggestions.length}}/500</view>
+  </view>
+
+  <view class="privacy-note">请不要填写姓名、联系方式、公司机密或客户信息。</view>
+
+  <view class="button-stack feedback-actions">
+    <button class="main-button" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">提交反馈</button>
+    <button class="secondary-button" bindtap="onBackToPlan">返回7天计划</button>
+  </view>
+</view>

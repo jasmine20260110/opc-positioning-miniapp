@@ -5,7 +5,9 @@
     "pages/question/index",
     "pages/loading/index",
     "pages/report/index",
-    "pages/plan/index"
+    "pages/opc-transition/index",
+    "pages/plan/index",
+    "pages/feedback/index"
   ],
   "window": {
     "backgroundColor": "#F5F1EC",

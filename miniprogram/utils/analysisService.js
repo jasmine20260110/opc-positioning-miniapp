@@ -40,6 +40,7 @@ async function callAnalysisAction(action, payload) {
     const error = new Error(source.message || "AI分析失败，请重试或使用演示数据。");
     error.code = source.code || "AI_ANALYSIS_FAILED";
     error.retryable = source.retryable !== false;
+    error.details = source.details || "";
     throw error;
   }
   return result.data;
