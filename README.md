@@ -32,15 +32,17 @@
 
 ### 首页
 
-![OPC定位神器首页](assets/home.png)
+<img width="595" height="1212" alt="image" src="https://github.com/user-attachments/assets/ccd35a5a-3157-45d6-8ff1-e61432ad0071" />
 
 ### 三条候选路线过渡页
 
-![三条候选路线过渡页](assets/route-transition.png)
+![Uploading image.png…]()
+
 
 ### 证据与候选路线示例
 
-![证据与候选路线示例](assets/evidence-result.png)
+<img width="595" height="1213" alt="image" src="https://github.com/user-attachments/assets/add2d969-b41a-4371-b37c-701853c5f725" />
+
 
 截图中的回答、数字和路线均为虚构演示内容，不代表真实用户信息或实际运营数据。更精简的产品说明见 [公开版功能说明](docs/公开版功能说明.md)。
 
